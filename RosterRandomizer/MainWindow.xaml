@@ -1,0 +1,76 @@
+﻿<Window x:Class="RosterRandomizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RosterRandomizer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Rectangle Fill="LightSkyBlue"></Rectangle>
+        <StackPanel HorizontalAlignment="Left" Margin="21,29,0,0" VerticalAlignment="Top" >
+            <Button x:Name="btnLoadRoster" Click="btnLoadRoster_Click" Style="{DynamicResource styMenuButton}">
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource styButtonText}">
+                    Load Class Roster
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+            <Button x:Name="btnPickRandom" Click="btnPickRandom_Click" Style="{DynamicResource styMenuButton}">
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource styButtonText}">
+                    Pick Random Student
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+            <Button x:Name="btnRemoveSelected" Click="btnRemoveSelected_Click" Style="{DynamicResource styMenuButton}">
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource styButtonText}">
+                    Remove Selected Students
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+            <Button x:Name="btnAddStudent" Click="btnAddStudent_Click" Style="{DynamicResource styMenuButton}">
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource styButtonText}">
+                    Add a Student
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        <WrapPanel x:Name="wpStudents" Grid.Column="1">
+            <!--<Grid Style="{DynamicResource styGridStudent}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Viewbox Style="{DynamicResource styViewStudent}">
+                    <TextBlock Style="{DynamicResource styTextStudent}"><Run Text="No Students"/><LineBreak /><Run Text="Loaded"/></TextBlock>
+                </Viewbox>
+                <Viewbox Grid.Row="1">
+                    <CheckBox />
+                </Viewbox>
+                <TextBlock Style="{DynamicResource styStudentNumber}" Text="12" />
+            </Grid>-->
+            <!--<local:Student FirstName="Bob" LastName="Awesome"></local:Student>
+            <local:Student FirstName="Lilly" LastName="Wonderful"></local:Student>-->
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+            <TextBox x:Name="txtTagName" Width="250" Margin="5"></TextBox>
+            <Button x:Name="btnTagSelected" Margin="5">
+                <Button.Content>
+                    <Span>Add Tag to Selected Students</Span>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+    </Grid>
+</Window>
