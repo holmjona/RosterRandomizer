@@ -19,6 +19,7 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Image Source="logo.png" Grid.Row="1" Grid.Column="1" Stretch="Uniform" VerticalAlignment="Top" Opacity=".1"/>
         <Viewbox Grid.Row="1" Grid.Column="1">
             <TextBlock x:Name="tbName"/>
         </Viewbox>
