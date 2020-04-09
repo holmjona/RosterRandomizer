@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace RosterRandomizer {
-   public class Student:UserControl {
+    public class Student {
         private int _ID;
         private string _FirstName;
         private string _LastName;
@@ -15,7 +15,7 @@ namespace RosterRandomizer {
         private bool _IsSelected = false;
         private List<string> _Tags;
 
-                       public Student() { }
+        public Student() { }
 
         /// <summary>
         /// ID to uniquely identify student in the system.

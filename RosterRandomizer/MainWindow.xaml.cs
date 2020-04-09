@@ -25,6 +25,7 @@ namespace RosterRandomizer {
 
 
         private static List<CheckBox> _StudentCheckBoxes = new List<CheckBox>();
+        private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
 
         public MainWindow() {
             InitializeComponent();
@@ -32,12 +33,22 @@ namespace RosterRandomizer {
 
         private void btnLoadRoster_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog ofd = new OpenFileDialog();
-
+            ofd.Filter = _JSONFileFilter;
             if (ofd.ShowDialog() == true) {
                 String lines = File.ReadAllText(ofd.FileName);
-                // Moodles puts the list in a list. Weird I know.
-                List<List<Student>> students = JsonSerializer.Deserialize<List<List<Student>>>(lines);
-                foreach (Student stud in students[0]) {
+                List<Student> students = null;
+                bool isMoodleFile = false;
+                string startOfFile = lines.Substring(0, lines.IndexOf('{') + 1);
+                int countOfLists = CountArrays(startOfFile);
+                if (countOfLists == 2) {
+                    // must be Moodle
+                    // Moodles puts the list in a list. Weird I know.
+                    List<List<Student>> temp = JsonSerializer.Deserialize<List<List<Student>>>(lines);
+                    students = temp[0];
+                } else { // assume one list
+                    students = JsonSerializer.Deserialize<List<Student>>(lines);
+                }
+                foreach (Student stud in students) {
                     DataStore.Students.AddUnique(stud.Email, stud);
                 }
                 FillWrapPanel();
@@ -46,12 +57,20 @@ namespace RosterRandomizer {
             }
         }
 
+        private int CountArrays(string startOfFile) {
+            int countOfOpens = 0;
+            foreach (char c in startOfFile) {
+                if (c == '[') countOfOpens++;
+            }
+            return countOfOpens;
+        }
+
         private void FillWrapPanel() {
             wpStudents.Children.Clear();
             int studentNumber = 0;
             foreach (Student stud in DataStore.Students.Values) {
                 stud.ID = studentNumber;
-                MakeStudentGrid(studentNumber, stud);
+                MakeStudentGrid(stud);
                 studentNumber++;
             }
             foreach (Student stud in DataStore.Students.Values) {
@@ -60,9 +79,9 @@ namespace RosterRandomizer {
 
         }
 
-        private void MakeStudentGrid(int studentNumber, Student stud) {
+        private void MakeStudentGrid(Student stud) {
             Grid grd = new Grid();
-            grd.Name = "Grid_" + studentNumber;
+            grd.Name = "Grid_" + stud.ID;
             grd.MouseUp += StudentGrid_Checked;
             // Name row
             grd.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(8, GridUnitType.Star) });
@@ -82,7 +101,9 @@ namespace RosterRandomizer {
             // checkbox
             Viewbox vbCheck = new Viewbox();
             CheckBox chk = new CheckBox();
-            chk.Name = "Check_" + studentNumber;
+            chk.Name = "Check_" + stud.ID;
+            // set state based on existing student state.
+            chk.IsChecked = stud.IsSelected;
             chk.Checked += Student_Checked;
             chk.Tag = grd;
             vbCheck.Child = chk;
@@ -93,12 +114,12 @@ namespace RosterRandomizer {
 
             // Student Number 
             TextBlock tbNumber = new TextBlock();
-            tbNumber.Text = studentNumber.ToString();
+            tbNumber.Text = stud.ID.ToString();
             tbNumber.Style = App.Current.Resources["styStudentNumber"] as Style;
 
             // Reset button
             Button btnReset = new Button();
-            btnReset.Name = "Reset_" + studentNumber;
+            btnReset.Name = "Reset_" + stud.ID;
             btnReset.Click += btnResetMe_Click;
             btnReset.Style = App.Current.Resources["styResetStudentButton"] as Style;
             grd.Children.Add(btnReset);
@@ -228,14 +249,26 @@ namespace RosterRandomizer {
                 // added student
                 Student lastStudentAdded = DataStore.Students.Values.Last();
                 int newID = DataStore.Students.Count();
-                MakeStudentGrid(newID, lastStudentAdded);
+                lastStudentAdded.ID = newID;
+                MakeStudentGrid(lastStudentAdded);
             }
 
         }
 
         private void btnExportStudents_Click(object sender, RoutedEventArgs e) {
             if (DataStore.Students.Count > 0) {
-
+                SaveFileDialog sfd = new SaveFileDialog();
+                List<Student> studentsToExport = new List<Student>();
+                foreach (Student st in DataStore.Students.Values) {
+                    studentsToExport.Add(st);
+                }
+                sfd.Filter = _JSONFileFilter;
+                if (sfd.ShowDialog() == true) {
+                    string jsonString = JsonSerializer.Serialize<List<Student>>(studentsToExport);
+                    File.WriteAllText(sfd.FileName, jsonString);
+                } else {
+                    ShowPopUp("Oops, problem getting file.");
+                }
             } else {
                 ShowPopUp("There are no students in the system. There is nothing to export.");
             }
