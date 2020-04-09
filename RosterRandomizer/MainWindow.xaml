@@ -31,13 +31,6 @@
                     </TextBlock>
                 </Button.Content>
             </Button>
-            <Button x:Name="btnRemoveSelected" Click="btnRemoveSelected_Click" Style="{DynamicResource styMenuButton}">
-                <Button.Content>
-                    <TextBlock Style="{DynamicResource styButtonText}">
-                    Remove Selected Students
-                    </TextBlock>
-                </Button.Content>
-            </Button>
             <Button x:Name="btnAddStudent" Click="btnAddStudent_Click" Style="{DynamicResource styMenuButton}">
                 <Button.Content>
                     <TextBlock Style="{DynamicResource styButtonText}">
@@ -45,24 +38,48 @@
                     </TextBlock>
                 </Button.Content>
             </Button>
+            <Button x:Name="btnExportStudents" Click="btnExportStudents_Click" Style="{DynamicResource styMenuButton}">
+                <Button.Content>
+                    <TextBlock Style="{DynamicResource styButtonText}">
+                    Export Students
+                    </TextBlock>
+                </Button.Content>
+            </Button>
         </StackPanel>
-        <WrapPanel x:Name="wpStudents" Grid.Column="1">
-            <!--<Grid Style="{DynamicResource styGridStudent}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="8*" />
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <Viewbox Style="{DynamicResource styViewStudent}">
-                    <TextBlock Style="{DynamicResource styTextStudent}"><Run Text="No Students"/><LineBreak /><Run Text="Loaded"/></TextBlock>
-                </Viewbox>
-                <Viewbox Grid.Row="1">
-                    <CheckBox />
-                </Viewbox>
-                <TextBlock Style="{DynamicResource styStudentNumber}" Text="12" />
-            </Grid>-->
-            <!--<local:Student FirstName="Bob" LastName="Awesome"></local:Student>
-            <local:Student FirstName="Lilly" LastName="Wonderful"></local:Student>-->
-        </WrapPanel>
+        <ScrollViewer Grid.Column="1">
+            <WrapPanel x:Name="wpStudents" >
+                <!--<Grid Style="{DynamicResource styGridStudent}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8*" />
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Viewbox Style="{DynamicResource styViewStudent}">
+                        <TextBlock Style="{DynamicResource styTextStudent}"><Run Text="No Students"/><LineBreak /><Run Text="Loaded"/></TextBlock>
+                    </Viewbox>
+                    <Viewbox Grid.Row="1">
+                        <CheckBox />
+                    </Viewbox>
+                    <TextBlock Style="{DynamicResource styStudentNumber}" Text="12" />
+                    <Button Click="btnResetMe_Click" Style="{DynamicResource styResetStudentButton}" ></Button>
+                </Grid>
+                <Grid Style="{DynamicResource styGridStudentAbsent}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8*" />
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Viewbox Style="{DynamicResource styViewStudent}">
+                        <TextBlock Style="{DynamicResource styTextStudent}"><Run Text="Student"/><LineBreak /><Run Text="Not Here"/></TextBlock>
+                    </Viewbox>
+                    <Viewbox Grid.Row="1">
+                        <CheckBox />
+                    </Viewbox>
+                    <TextBlock Style="{DynamicResource styStudentNumber}" Text="12" />
+                    <Button Click="btnResetMe_Click" Style="{DynamicResource styResetStudentButton}" ></Button>
+                </Grid>
+                <local:Student FirstName="Bob" LastName="Awesome"></local:Student>
+                <local:Student FirstName="Lilly" LastName="Wonderful"></local:Student>-->
+            </WrapPanel>
+        </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
             <TextBox x:Name="txtTagName" Width="250" Margin="5"></TextBox>
             <Button x:Name="btnTagSelected" Margin="5">
@@ -70,6 +87,12 @@
                     <Span>Add Tag to Selected Students</Span>
                 </Button.Content>
             </Button>
+            <Button x:Name="btnRemoveSelected"  Margin="5" Click="btnRemoveSelected_Click">
+                <Button.Content>
+                    Remove Selected Students
+                </Button.Content>
+            </Button>
+
         </StackPanel>
 
     </Grid>

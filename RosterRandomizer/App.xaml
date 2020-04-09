@@ -20,6 +20,15 @@
             <Setter Property="Height" Value="60" />
 
         </Style>
+        <Style TargetType="Button" x:Key="styResetStudentButton">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="15" />
+            <Setter Property="Grid.Row" Value="99" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Content" Value="Reset" />
+            <Setter Property="FontSize" Value="8" />
+        </Style>
         <Style TargetType="TextBlock" x:Key="styButtonText">
             <Setter Property="Margin" Value="2" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -39,8 +48,11 @@
         </Style>
         <Style TargetType="Grid" x:Key="styGridStudentChecked" BasedOn="{StaticResource styGridStudent}">
             <Setter Property="Background" Value="#FF199B10" />
-
         </Style>
+        <Style TargetType="Grid" x:Key="styGridStudentAbsent" BasedOn="{StaticResource styGridStudent}">
+            <Setter Property="Background" Value="#FF999999" />
+        </Style>
+
         <Style x:Key="styViewStudent" TargetType="{x:Type Viewbox}">
             <Setter Property="Margin" Value="3"/>
         </Style>
