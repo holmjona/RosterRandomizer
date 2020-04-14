@@ -29,6 +29,9 @@ namespace RosterRandomizer {
 
         public MainWindow() {
             InitializeComponent();
+            tbShowingOnTop.Visibility = Visibility.Hidden;
+            // fix for odd menu behavior is likely found here:
+            //https://stackoverflow.com/questions/4630954/wpf-menu-displays-to-the-left-of-the-window
         }
 
         private void btnLoadRoster_Click(object sender, RoutedEventArgs e) {
@@ -282,12 +285,37 @@ namespace RosterRandomizer {
             Button btn = (Button)sender;
             string bNum = btn.Name.Split("_")[1];
             CheckBox chk = _StudentCheckBoxes.First(ch => ch.Name == "Check_" + bNum);
-    
+
             Student found = DataStore.GetStudent(bNum);
             found.InClass = true;
             chk.IsChecked = found.IsSelected = false;
 
             UpdateStudentGridStyle(found);
+        }
+
+        private void miOnTop_Checked(object sender, RoutedEventArgs e) {
+            chkOnTop.IsChecked = miOnTop.IsChecked;
+
+        }
+
+        private void chkOnTop_Checked(object sender, RoutedEventArgs e) {
+
+            if (chkOnTop.IsChecked == true) {
+                this.Topmost = true;
+                tbShowingOnTop.Visibility = Visibility.Visible;
+                this.Title = this.Title + " (on top)";
+            } else {
+                this.Topmost = false;
+                tbShowingOnTop.Visibility = Visibility.Hidden;
+                this.Title = this.Title.Remove(this.Title.IndexOf(" (on top)"));
+            }
+            // make sure all checks match condition being set. 
+            miOnTop.IsChecked = chkOnTop.IsChecked == true;
+
+        }
+
+        private void miExit_Click(object sender, RoutedEventArgs e) {
+            Application.Current.Shutdown();
         }
     }
 }

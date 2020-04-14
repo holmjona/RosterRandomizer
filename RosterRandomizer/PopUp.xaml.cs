@@ -21,6 +21,7 @@ namespace RosterRandomizer {
             tbName.Text = txtToShow;
             cdNotHere.Width = new GridLength(0);
             btnNotHere.Visibility = Visibility.Collapsed;
+            pthPositive.Visibility = Visibility.Collapsed;
         }
 
         public PopUp(Student stud) {
