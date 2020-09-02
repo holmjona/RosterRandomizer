@@ -317,5 +317,15 @@ namespace RosterRandomizer {
         private void miExit_Click(object sender, RoutedEventArgs e) {
             Application.Current.Shutdown();
         }
+
+        private void miWhereGetRoster_Click(object sender, RoutedEventArgs e) {
+            Help frm = new Help(Help.Tabs.WhereToGet);
+            frm.ShowDialog();
+        }
+
+        private void miWhatFileFormat_Click(object sender, RoutedEventArgs e) {
+            Help frm = new Help(Help.Tabs.WhatFormat);
+            frm.ShowDialog();
+        }
     }
 }

@@ -1,0 +1,102 @@
+﻿<Window x:Class="RosterRandomizer.Help"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RosterRandomizer"
+        mc:Ignorable="d"
+        Title="Help" Height="437" Width="630">
+    <Grid>
+        <TabControl x:Name="tbcHelp">
+            <TabItem Header="_Where do I get my Roster">
+                <Grid Background="#FFE5E5FF">
+                    <ScrollViewer>
+                        <TextBlock TextWrapping="Wrap">
+                            This application is designed to use the Roster (in JSON format) from your Moodle course.<LineBreak />
+                            <LineBreak />
+                            To get your Roster in Moodle.<LineBreak />
+                            <Run Text="   "/>1. Login to Moodle at <Hyperlink NavigateUri="https://elearn.isu.edu">https://elearn.isu.edu</Hyperlink><LineBreak />
+                            <Run Text="   "/>2. Navigate to the correct couse from your Dashboard.<LineBreak />
+                            <Run Text="   "/>3. Navigate to the participants list for your course.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>a. You can click the <Run FontWeight="Bold">gear</Run> in the top right corner of the page, under your picture.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>i. Click <Run FontWeight="Bold">More....</Run><LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>ii. Click the <Run FontWeight="Bold">Users</Run> tab.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>iii. Click the <Run FontWeight="Bold">Enrolled users</Run> link.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>b. You can click on the <Run FontWeight="Bold">Participants</Run> link under the course name on the left side of the page.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>i. You may have to click on the <Run FontWeight="Bold">hamburger button</Run> in the top left corner of the page.<LineBreak />
+                            <Run Text="   "/>4. On the Participants page, scroll to the bottom of the page. <LineBreak />
+                            <Run Text="   "/><Run Text="   "/>a. Click the button <Run FontWeight="Bold">select all ## users</Run> (this will be relative to the number of students in you class).<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>i. This may reload the page and you will have to scroll to the bottom again.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>ii. If you do not want a person listed in you downloaded roster, uncheck them in the list.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>b. In the drop down list at the bottom of the list, pick the option <Run FontWeight="Bold">Javascript Object Notation (.json)</Run> 
+                            listed under <Run FontWeight="Bold">Download table data as</Run>.<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>c. This will start a download of your class roster as a JSON file.<LineBreak /> 
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>i. <Run FontWeight="Bold">Save</Run> this file to a location on your computer where you can find it.<LineBreak />
+
+
+                        </TextBlock>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Import File Format">
+                <Grid Background="#FFF5FFF5">
+                    <ScrollViewer>
+                        <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
+                            This application is designed to use the Roster in JSON format.<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">*firstname</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(REQUIRED) student's first (given) name.<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">*lastname</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(REQUIRED) student's last (sur) name.<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">*email</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(REQUIRED) student's email address (must be <Run FontWeight="Bold">unique</Run> to the rest of the list).<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">ID</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(optional) unique integer value for this student in the list.<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">tags</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(optional) list/array of tags that identify the student. These can be non-unique.<LineBreak />
+                            <Run Text="   "/><Run FontWeight="Bold">inclass</Run>:<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>(optional) true|false - whether the student is considered in class. <LineBreak />
+                            <Run Text="   "/><Run Text="   "/>Students not "in class" will be ignorged when randomly picking a student from the list.<LineBreak />
+                            <LineBreak />
+                            <Run FontWeight="Bold">* Required field </Run>
+                            <LineBreak />
+                            <LineBreak />
+                            You can create your own Roster following the following format:<LineBreak />
+                            <LineBreak />
+                            [<LineBreak />
+                            <Run Text="   "/>[<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>{<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"ID":0,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"firstname":"John", "lastname":"Doe", "email":"doejohn@isu.edu",<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"inclass":true, "tags":["Pocatello"]<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>}<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>{ <LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"ID":1,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"firstname":"Jane", "lastname":"Doe", "email":"doejane@isu.edu",<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"inclass":true, "tags":["Pocatello","ADA"]<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>}<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>{<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"ID":2,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"firstname":"John", "lastname":"Hancock", "email":"hancjohn@isu.edu",<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"inclass":true, "tags":["Idaho Falls","honors"]<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>}<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>{<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"ID":3,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"firstname":"Tracy", "lastname":"Mitchell", "email":"tracy.mitchell@gmail.com",<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>"inclass":false, "tags":["Pocatello"]<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>}<LineBreak />
+                            <Run Text="   "/><Run Text="   "/><Run Text="   "/>,<LineBreak />
+                            <Run Text="   "/><Run Text="   "/>// etc.<LineBreak />
+                            <Run Text="   "/>]<LineBreak />
+                            ]<LineBreak />
+                            
+                        </TextBlock>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
