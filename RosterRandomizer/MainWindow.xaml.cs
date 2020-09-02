@@ -192,8 +192,10 @@ namespace RosterRandomizer {
                     chkFound.IsChecked = true;
                     Student_Checked(chkFound, null);
                     UpdateStudentGridStyle(studFound);
-                    if (!studFound.InClass) {
+                    //if (!studFound.InClass) {
+                    if (PopUp.PickAgain) {
                         // pick another student
+                        PopUp.PickAgain = false;
                         btnPickRandom_Click(sender, e);
                     }
                 } else {
@@ -211,10 +213,10 @@ namespace RosterRandomizer {
         private void ShowPopUp(object obj) {
             PopUp frm;
             if (obj.GetType() == typeof(Student)) {
-                frm = new PopUp((Student)obj);
+                frm = new PopUp((Student)obj, this.Topmost);
             } else {
                 // assume string if not student.
-                frm = new PopUp(obj.ToString());
+                frm = new PopUp(obj.ToString(), this.Topmost);
             }
             frm.Owner = this;
             frm.ShowDialog();
