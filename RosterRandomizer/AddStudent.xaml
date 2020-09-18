@@ -14,9 +14,7 @@
         <Label Content="Email (must be unique)" HorizontalAlignment="Left" Margin="61,140,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtEmail" HorizontalAlignment="Left" Margin="61,166,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.5,0.5" KeyUp="txtEmail_KeyUp" />
         <TextBlock x:Name="tbEmailError" Text="Email address already exists in the system." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="204,166,0,0" TextWrapping="Wrap" Foreground="#FFAE0606" Background="#FFFDDEDE"/>
-        <Label Content="Add a Student" Margin="10,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Bold" FontSize="26.667"/>
+        <Label x:Name="lblTitle" Content="Add a Student" VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Bold" FontSize="26.667"/>
         <Button x:Name="btnAddStudent" Content="Add Student" HorizontalAlignment="Center" Margin="0,200,0,0" VerticalAlignment="Top" Click="btnAddStudent_Click"/>
-
-
     </Grid>
 </Window>

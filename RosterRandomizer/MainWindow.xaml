@@ -94,6 +94,10 @@
             </WrapPanel>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+            <StackPanel>
+                <Slider Width="100" Minimum="50" Maximum="250" Value="100" x:Name="sldBoxSize" ValueChanged="sldBoxSize_ValueChanged"></Slider>
+                <TextBlock HorizontalAlignment="Center">Box Size</TextBlock>
+            </StackPanel>
             <TextBox x:Name="txtTagName" Width="250" Margin="5"></TextBox>
             <Button x:Name="btnTagSelected" Margin="5">
                 <Button.Content>

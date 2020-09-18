@@ -16,9 +16,19 @@ namespace RosterRandomizer {
     /// </summary>
     public partial class AddStudent : Window {
         public bool AddSuccessful = false;
+        Student studentToEdit = null;
         public AddStudent() {
             InitializeComponent();
             tbEmailError.Visibility = Visibility.Hidden;
+        }
+
+        public AddStudent(Student stud):this(){
+            studentToEdit = stud;
+            lblTitle.Content = "Edit " + stud.FullName;
+            btnAddStudent.Content = "Save Changes";
+            txtFirstName.Text = studentToEdit.FirstName;
+            txtLastName.Text = studentToEdit.LastName;
+            txtEmail.Text = studentToEdit.Email;
         }
 
         private void txtEmail_KeyUp(object sender, KeyEventArgs e) {
@@ -43,13 +53,32 @@ namespace RosterRandomizer {
         }
 
         private void btnAddStudent_Click(object sender, RoutedEventArgs e) {
-            Student newStudent = new Student();
-            newStudent.FirstName = txtFirstName.Text;
-            newStudent.LastName = txtLastName.Text;
-            newStudent.Email = txtEmail.Text;
+            Student thisStudent;
+            bool editingExisting = studentToEdit != null;
+            string oldEmail = "";
+            bool addStudentToList = true;
+            if (editingExisting) {
+                thisStudent = studentToEdit;
+                oldEmail = thisStudent.Email;
+            } else {
+                thisStudent = new Student();
+            }
+            thisStudent.FirstName = txtFirstName.Text;
+            thisStudent.LastName = txtLastName.Text;
+            thisStudent.Email = txtEmail.Text;
+            
+            if (editingExisting) {
+                bool emailChanged = oldEmail != thisStudent.Email;
+                if (emailChanged) {
+                    DataStore.Students.Remove(oldEmail);
+                    addStudentToList = true;
+                }
+            }
+            if (addStudentToList) {
+                DataStore.Students.AddUnique(thisStudent.Email, thisStudent);
+                AddSuccessful = true;
+            }
 
-            DataStore.Students.AddUnique(newStudent.Email, newStudent);
-            AddSuccessful = true;
             this.Close();
         }
     }

@@ -26,6 +26,7 @@ namespace RosterRandomizer {
 
         private static List<CheckBox> _StudentCheckBoxes = new List<CheckBox>();
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
+        private double _BoxSize = 100;
 
         public MainWindow() {
             InitializeComponent();
@@ -33,7 +34,11 @@ namespace RosterRandomizer {
             // fix for odd menu behavior is likely found here:
             //https://stackoverflow.com/questions/4630954/wpf-menu-displays-to-the-left-of-the-window
         }
-
+        /// <summary>
+        /// Load Roster from file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLoadRoster_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = _JSONFileFilter;
@@ -60,6 +65,12 @@ namespace RosterRandomizer {
             }
         }
 
+        /// <summary>
+        /// Count the number of nested arrays.
+        /// Mostly needed if this file is from Moodle.
+        /// </summary>
+        /// <param name="startOfFile">start of the file string</param>
+        /// <returns>count of opening array bracke</returns>
         private int CountArrays(string startOfFile) {
             int countOfOpens = 0;
             foreach (char c in startOfFile) {
@@ -68,6 +79,9 @@ namespace RosterRandomizer {
             return countOfOpens;
         }
 
+        /// <summary>
+        /// Fills the Wrap Panel with students.
+        /// </summary>
         private void FillWrapPanel() {
             wpStudents.Children.Clear();
             int studentNumber = 0;
@@ -82,8 +96,14 @@ namespace RosterRandomizer {
 
         }
 
+        /// <summary>
+        /// Make the student card.
+        /// </summary>
+        /// <param name="stud">Student to populate card about.</param>
         private void MakeStudentGrid(Student stud) {
             Grid grd = new Grid();
+            grd.Width = _BoxSize;
+            grd.Height = _BoxSize;
             grd.Name = "Grid_" + stud.ID;
             grd.MouseUp += StudentGrid_Checked;
             // Name row
@@ -127,18 +147,32 @@ namespace RosterRandomizer {
             btnReset.Style = App.Current.Resources["styResetStudentButton"] as Style;
             grd.Children.Add(btnReset);
 
+            Button btnEdit = new Button();
+            btnEdit.Name = "Edit_" + stud.ID;
+            btnEdit.Click += BtnEdit_Click;
+            btnEdit.Style = App.Current.Resources["styEditStudentButton"] as Style;
+            grd.Children.Add(btnEdit);
+
             grd.Children.Add(tbNumber);
 
         }
+
+
 
         private void StudentGrid_Checked(object sender, MouseButtonEventArgs e) {
             Student_Checked(sender, null);
         }
 
+        /// <summary>
+        /// React to the student card being checked or unchecked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Student_Checked(object sender, RoutedEventArgs e) {
             CheckBox chk = null;
             Grid g = null;
             string studNumber = ((FrameworkElement)sender).Name.Split("_")[1];
+            // check to see if the checkbox or grid was clicked.
             if (sender.GetType() == typeof(CheckBox)) {
                 chk = (CheckBox)sender;
                 g = (Grid)chk.Tag;
@@ -153,14 +187,22 @@ namespace RosterRandomizer {
             UpdateStudentGridStyle(found);
         }
 
+        /// <summary>
+        /// Update teh style for a given student.
+        /// </summary>
+        /// <param name="id">The unique ID for the student.</param>
         private void UpdateStudentGridStyle(int id) {
             Student found = DataStore.GetStudent(id);
             UpdateStudentGridStyle(found);
         }
 
+        /// <summary>
+        /// Update the style for a given student
+        /// </summary>
+        /// <param name="stud">Student associated with card.</param>
         private void UpdateStudentGridStyle(Student stud) {
             Grid studGrid = (Grid)LogicalTreeHelper.FindLogicalNode(wpStudents, "Grid_" + stud.ID);
-
+            // check student attributes to decide which style to apply.
             if (stud.InClass) {
                 if (stud.IsSelected) {
                     studGrid.Style = App.Current.Resources["styGridStudentChecked"] as Style;
@@ -172,10 +214,16 @@ namespace RosterRandomizer {
             }
         }
 
+        /// <summary>
+        /// Pick a random student that has not already been picked or is absent.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPickRandom_Click(object sender, RoutedEventArgs e) {
             if (DataStore.Students.Count > 0) {
                 string key = DataStore.GetUnusedKey();
-                if (key == "NONE") {
+                // react based on next key
+                if (key == "NONE") { // No students left to pick from.
                     ShowPopUp("All students picked, resetting list.");
                     // reset all students (not absent)
                     foreach (Student currStudent in DataStore.Students.Values) {
@@ -185,9 +233,9 @@ namespace RosterRandomizer {
                     }
                     key = DataStore.GetUnusedKey();
                 }
-                if (key != "NONE") {
+                if (key != "NONE") { // Found an available student.
                     Student studFound = DataStore.Students[key];
-                    ShowPopUp(studFound);
+                    ShowPopUp(studFound); // display student to user.
                     CheckBox chkFound = (CheckBox)LogicalTreeHelper.FindLogicalNode(wpStudents, "Check_" + studFound.ID);
                     chkFound.IsChecked = true;
                     Student_Checked(chkFound, null);
@@ -206,6 +254,11 @@ namespace RosterRandomizer {
                 ShowPopUp("There are no students in the system.");
             }
         }
+
+        /// <summary>
+        /// Show popup for text box
+        /// </summary>
+        /// <param name="txt"></param>
         private void ShowPopUp(string txt) {
             ShowPopUp((object)txt);
         }
@@ -256,6 +309,25 @@ namespace RosterRandomizer {
                 int newID = DataStore.Students.Count();
                 lastStudentAdded.ID = newID;
                 MakeStudentGrid(lastStudentAdded);
+            }
+
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e) {
+            Button btn = (Button)sender;
+            string[] idParts = btn.Name.Split("_");
+            int studentID = int.Parse(idParts[1]);
+            Student studToEdit = DataStore.Students.Values
+                .FirstOrDefault(s => s.ID == studentID);
+            if (studToEdit != null) {
+                AddStudent frm = new AddStudent(studToEdit);
+                frm.ShowDialog();
+                if (frm.AddSuccessful) {
+                    // Student email changed
+                }
+                FillWrapPanel();
+            } else {
+                ShowPopUp("Could not find the student to edit.");
             }
 
         }
@@ -328,6 +400,11 @@ namespace RosterRandomizer {
         private void miWhatFileFormat_Click(object sender, RoutedEventArgs e) {
             Help frm = new Help(Help.Tabs.WhatFormat);
             frm.ShowDialog();
+        }
+
+        private void sldBoxSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _BoxSize = sldBoxSize.Value;
+            FillWrapPanel();
         }
     }
 }
