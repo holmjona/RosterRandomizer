@@ -37,3 +37,47 @@ function toggleCard(crd) {
         }
     }
 }
+
+function changeCard(crd,reset) {
+    if (typeof reset == "undefined") reset = false;
+
+    var chk = crd.find("input:checkbox");
+    //    if (chk.is(":checked")) {
+    //        chk.attr("checked", null);
+    //        crd.removeClass("picked");
+    //    } else {
+    //        chk.attr("checked", "checked");
+    //        crd.addClass("picked");
+    //    }
+
+    $.ajax({
+        url: "UpdateStudent",
+        method: "post",
+        data: {
+            code: myCode,
+            studentid: studid,
+            isSelected: selected,
+            inClass: present,
+            reset: reset
+        },
+        success: function () {
+
+        },
+        error: function () {
+
+        }
+
+    });
+    //if (crd.hasClass("absent")) {
+    //    // do nothing
+    //} else {
+    //    var chk = crd.find("input:checkbox");
+    //    if (chk.is(":checked")) {
+    //        chk.attr("checked", null);
+    //        crd.removeClass("picked");
+    //    } else {
+    //        chk.attr("checked", "checked");
+    //        crd.addClass("picked");
+    //    }
+    //}
+}
