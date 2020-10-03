@@ -3,6 +3,8 @@
 
 // Write your JavaScript code.
 
+var currentCard = null;
+
 $("#student-roster").mouseup(function (e) {
     e = e || window.event;
     var tar = $(e.target);
@@ -81,9 +83,92 @@ function changeCard(crd, reset, present) {
     });
 }
 
-function showModal(crd) {
+function showModal(showMe) {
+    if (showMe) {
+        if (currentCard !== null) {
+            var crd = $(currentCard);
+            var idParts = crd[0].id.split("-");
+            var action = idParts[0];
+            var studId = idParts[1];
+            if (action === "reset") {
+                // list has been reset.
 
+            }
+        }
+        $("#cardHolder").empty().append(currentCard);
+        $("#shadowBox").show();
+    } else {
+        $("#shadowBox").hide();
+    }
+}
 
-    $("#modal").show();
+function replaceCard() {
+    if (currentCard !== null) {
+        var crd = $(currentCard);
+        var idParts = crd[0].id.split("-");
+        var action = idParts[0];
+        var studId = idParts[1];
+        if (action === "reset") {
+            //reset whole list
+        } else {
+            // update single card
+            var cardId = "student-" + studId;
+            var oldCard = $("#" + cardId);
+            //oldCard.replaceWith(crd);
+            //crd.attr("id", cardId);
+            updateStudent(oldCard);
+            currentCard = null;
+        }
+    } else {
+        alert("Oops no card to replace.");
+    }
+}
+
+function getRandomStudent() {
+    $.ajax({
+        url: "StudentRoster/GetRandom",
+        method: "post",
+        data: {
+            code: myCode
+        },
+        success: function (newCrd) {
+            //alert(crd + "\n\n " +newCrd);
+            currentCard = newCrd;
+            showModal(true);
+        },
+        error: function (err, msg) {
+            alert(msg);
+        }
+
+    });
 
 }
+
+// Action buttons.
+$("#btnPickRandomStudent").mouseup(getRandomStudent);
+$("#btnExport").mouseup(function () {
+
+});
+$("#btnCopyCode").mouseup(function () {
+
+});
+
+
+// Modal buttons
+$("#modal a.closer").mouseup(function () {
+    showModal(false);
+});
+
+$("#btnOK").mouseup(function () {
+    replaceCard(currentCard);
+    showModal(false);
+});
+
+$("#btnOKAnother").mouseup(function () {
+    replaceCard(currentCard);
+    getRandomStudent();
+});
+
+$("#btnAbsentAnother").mouseup(function () {
+
+});

@@ -1,0 +1,7 @@
+﻿@model IEnumerable<RosterRandomizer.Student>
+
+<ol id="student-roster">
+    @foreach (RosterRandomizer.Student stud in Model) {
+        <partial name="Parts/Card" model="stud" />
+    }
+</ol>

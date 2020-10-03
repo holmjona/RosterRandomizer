@@ -3,25 +3,41 @@
     ViewData["Title"] = "FromCode";
 }
 
-    <div id="shadowBox">
-        <div id="modal">
-
-        </div>
-    </div>
 <h1>Class Code: @ViewBag.ClassCode</h1>
 <div class="actions">
     <button id="btnPickRandomStudent">Pick Random Student</button>
     <button id="btnExport">Export list</button>
     <button id="btnCopyCode">Copy Class Code to Clipboard</button>
 </div>
-<ol id="student-roster">
-@foreach(RosterRandomizer.Student stud in Model) {
-    <partial name="Parts/Card" model="stud" />
-}
-    </ol>
+<div id="roster-container">
+    <partial name="Parts/List" model="Model" />
+</div>
 <div class="float-reset"></div>
 
 
-@section Scripts{ 
-<script>var myCode = "@ViewBag.code";</script>
+<div id="shadowBox">
+    <div id="modal">
+        <a class="closer" href="#">Close</a>
+        <div id="modal-message">
+
+        </div>
+        <ul id="cardHolder">
+        </ul>
+        <ul id="modalControls">
+            <li>
+                <button id="btnOK">OK</button>
+            </li>
+            <li>
+                <button id="btnOKAnother">OK; pick another</button>
+            </li>
+            <li>
+                <button id="btnAbsentAnother">Not here; pick another.</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>var myCode = "@ViewBag.code";</script>
 }

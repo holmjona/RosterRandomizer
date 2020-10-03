@@ -11,8 +11,8 @@ using RosterRandomizer.Web.Models;
 namespace RosterRandomizer.Web.Controllers {
     public class StudentRosterController : Controller {
         //https://www.mikesdotnetting.com/Article/302/server-mappath-equivalent-in-asp-net-core
-        IHostingEnvironment _HostingEnvironment;
-        public StudentRosterController(IHostingEnvironment ihost) {
+        IWebHostEnvironment _HostingEnvironment;
+        public StudentRosterController(IWebHostEnvironment  ihost) {
             _HostingEnvironment = ihost;
         }
 
@@ -80,17 +80,18 @@ namespace RosterRandomizer.Web.Controllers {
             return retList;
         }
 
-        private async void UpdateStudents(List<Student> students, string code) {
+        private async Task<int> UpdateStudents(List<Student> students, string code) {
             string newJson = DataStore.ConvertToJSON(students);
             string filePath = getFilePath(code);
             await System.IO.File.WriteAllTextAsync(filePath, newJson);
+            return 1;
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateStudent(string code, int studentid, bool isSelected, bool inClass, bool reset) {
             List<Student> students = await GetStudentFromCode(code);
             Student stud = students.FirstOrDefault(s => s.ID == studentid);
-           
+
             if (stud != null) {
                 if (reset) {
                     stud.IsSelected = false;
@@ -100,9 +101,41 @@ namespace RosterRandomizer.Web.Controllers {
                     stud.InClass = inClass;
                 }
             }
+            Task.WaitAll(UpdateStudents(students, code));
+            return PartialView("Parts/Card", stud);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetRandom(string code) {
+            List<Student> students = await GetStudentFromCode(code);
+            int countAvailable = students.Count(s => s.InClass == true
+                                                 && s.IsSelected == false);
+            ViewBag.idHelper = "random";
+            if (countAvailable == 0) {
+                // reset list.
+                foreach (Student s in students) {
+                    s.IsSelected = false;
+                }
+                // indicate that the whole list has been reset and the GUI needs refreshed.
+                ViewBag.idHelper = "reset";
+            }
+            Student stud = null;
+            Random rnd = new Random();
+            while (stud == null) {
+                int nextID = rnd.Next(students.Count);
+                // get student if not picked already and in class.
+                stud = students.FirstOrDefault(s => s.ID == nextID
+                                                 && s.InClass == true
+                                                 && s.IsSelected == false);
+            }
+            // now mark student selected.
+            //stud.IsSelected = true;
+            // save list.
+            Task.WaitAll(UpdateStudents(students,code));
 
             return PartialView("Parts/Card", stud);
         }
+
 
     }
 }
