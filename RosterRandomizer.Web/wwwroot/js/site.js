@@ -63,7 +63,7 @@ function changeCard(crd, reset, present) {
     var chk = crd.find("input:checkbox");
 
     $.ajax({
-        url: "StudentRoster/UpdateStudent",
+        url: "UpdateStudent",
         method: "post",
         data: {
             code: myCode,
@@ -126,7 +126,7 @@ function replaceCard() {
 
 function getRandomStudent() {
     $.ajax({
-        url: "StudentRoster/GetRandom",
+        url: "GetRandom",
         method: "post",
         data: {
             code: myCode

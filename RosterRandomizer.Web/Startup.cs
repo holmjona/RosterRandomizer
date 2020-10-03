@@ -48,11 +48,11 @@ namespace RosterRandomizer.Web {
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                    name: "CodeUse",
-                    pattern: "Roster/{code=000000}",
-                    defaults: new {controller="StudentRoster",action="FromCode"}
-                    );
+                //endpoints.MapControllerRoute(
+                //    name: "CodeUse",
+                //    pattern: "Roster/{code=000000}",
+                //    defaults: new {controller="StudentRoster",action="FromCode"}
+                //    );
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
