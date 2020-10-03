@@ -67,6 +67,8 @@ namespace RosterRandomizer.Web.Controllers {
             if (numberNotExported > 0) {
                 // If not, convert to new upgraded JSON list
             }
+
+            ViewBag.code = code;
             return View(students);
         }
 
@@ -92,7 +94,7 @@ namespace RosterRandomizer.Web.Controllers {
             if (stud != null) {
                 if (reset) {
                     stud.IsSelected = false;
-                    stud.InClass = false;
+                    stud.InClass = true;
                 } else {
                     stud.IsSelected = isSelected;
                     stud.InClass = inClass;

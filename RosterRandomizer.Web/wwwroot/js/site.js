@@ -3,15 +3,17 @@
 
 // Write your JavaScript code.
 
-$("#student-roster").click(function (e) {
+$("#student-roster").mouseup(function (e) {
     e = e || window.event;
     var tar = $(e.target);
-    var card =  getParentCard(tar);
+    var card = getParentCard(tar);
     if (tar.is("button")) {
         // reset above all else
-        card.removeClass("absent").removeClass("picked");
+        //card.removeClass("absent").removeClass("picked");
+        changeCard(card, true,true);
     } else {
-        toggleCard(card);
+        //toggleCard(card);
+        updateStudent(card);
     }
 });
 
@@ -38,46 +40,50 @@ function toggleCard(crd) {
     }
 }
 
-function changeCard(crd,reset) {
-    if (typeof reset == "undefined") reset = false;
+function updateStudent(crd) {
+    if (crd.hasClass("absent")) {
+        // do nothing
+    } else {
+        var isAbsent = crd.hasClass("absent");
+        changeCard(crd,false,!isAbsent);
+    }
+}
 
+function changeCard(crd, reset, present) {
+    if (typeof reset === "undefined") reset = false;
+
+    if (typeof present === "undefined") {
+        present = !crd.hasClass("absent");
+    }
+
+    var idParts = crd[0].id.split("-");
+    var studId = idParts[1];
     var chk = crd.find("input:checkbox");
-    //    if (chk.is(":checked")) {
-    //        chk.attr("checked", null);
-    //        crd.removeClass("picked");
-    //    } else {
-    //        chk.attr("checked", "checked");
-    //        crd.addClass("picked");
-    //    }
 
     $.ajax({
-        url: "UpdateStudent",
+        url: "StudentRoster/UpdateStudent",
         method: "post",
         data: {
             code: myCode,
-            studentid: studid,
-            isSelected: selected,
+            studentid: studId,
+            isSelected: !chk.is(":checked"),
             inClass: present,
             reset: reset
         },
-        success: function () {
-
+        success: function (newCrd) {
+            //alert(crd + "\n\n " +newCrd);
+            crd.replaceWith(newCrd);
         },
-        error: function () {
-
+        error: function (err,msg) {
+            alert(msg);
         }
 
     });
-    //if (crd.hasClass("absent")) {
-    //    // do nothing
-    //} else {
-    //    var chk = crd.find("input:checkbox");
-    //    if (chk.is(":checked")) {
-    //        chk.attr("checked", null);
-    //        crd.removeClass("picked");
-    //    } else {
-    //        chk.attr("checked", "checked");
-    //        crd.addClass("picked");
-    //    }
-    //}
+}
+
+function showModal(crd) {
+
+
+    $("#modal").show();
+
 }

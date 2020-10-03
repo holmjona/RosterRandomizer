@@ -3,8 +3,9 @@
     string attended = Model.InClass ? "" : "absent";
     string picked = Model.IsSelected ? "picked" : "";
     string isChecked = Model.IsSelected ? "checked='checked'" : "";
+    string cardName = ViewBag.idHelper == null ? "student" : "temp";
 }
-<li class="student-card @attended @picked" id="student-@Model.ID">
+<li class="student-card @attended @picked" id="@cardName-@Model.ID">
     <h1><span class="first-name">@Model.FirstName</span> <span class="last-name">@Model.LastName</span></h1>
     <input class="student-check" @isChecked type="checkbox" id="chk-@Model.ID" name="chk-@Model.ID" />
     <span class="student-id">@Model.ID</span>

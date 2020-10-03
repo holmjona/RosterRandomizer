@@ -3,6 +3,11 @@
     ViewData["Title"] = "FromCode";
 }
 
+    <div id="shadowBox">
+        <div id="modal">
+
+        </div>
+    </div>
 <h1>Class Code: @ViewBag.ClassCode</h1>
 <div class="actions">
     <button id="btnPickRandomStudent">Pick Random Student</button>
@@ -15,4 +20,8 @@
 }
     </ol>
 <div class="float-reset"></div>
-    
+
+
+@section Scripts{ 
+<script>var myCode = "@ViewBag.code";</script>
+}
