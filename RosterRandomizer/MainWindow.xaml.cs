@@ -44,18 +44,7 @@ namespace RosterRandomizer {
             ofd.Filter = _JSONFileFilter;
             if (ofd.ShowDialog() == true) {
                 String lines = File.ReadAllText(ofd.FileName);
-                List<Student> students = null;
-                bool isMoodleFile = false;
-                string startOfFile = lines.Substring(0, lines.IndexOf('{') + 1);
-                int countOfLists = CountArrays(startOfFile);
-                if (countOfLists == 2) {
-                    // must be Moodle
-                    // Moodles puts the list in a list. Weird I know.
-                    List<List<Student>> temp = JsonSerializer.Deserialize<List<List<Student>>>(lines);
-                    students = temp[0];
-                } else { // assume one list
-                    students = JsonSerializer.Deserialize<List<Student>>(lines);
-                }
+                List<Student> students = DataStore.ParseStudents(lines);
                 foreach (Student stud in students) {
                     DataStore.Students.AddUnique(stud.Email, stud);
                 }
@@ -63,20 +52,6 @@ namespace RosterRandomizer {
             } else {
                 ShowPopUp("Oops, problem getting file.");
             }
-        }
-
-        /// <summary>
-        /// Count the number of nested arrays.
-        /// Mostly needed if this file is from Moodle.
-        /// </summary>
-        /// <param name="startOfFile">start of the file string</param>
-        /// <returns>count of opening array bracke</returns>
-        private int CountArrays(string startOfFile) {
-            int countOfOpens = 0;
-            foreach (char c in startOfFile) {
-                if (c == '[') countOfOpens++;
-            }
-            return countOfOpens;
         }
 
         /// <summary>
@@ -341,7 +316,7 @@ namespace RosterRandomizer {
                 }
                 sfd.Filter = _JSONFileFilter;
                 if (sfd.ShowDialog() == true) {
-                    string jsonString = JsonSerializer.Serialize<List<Student>>(studentsToExport);
+                    string jsonString = DataStore.ConvertToJSON(studentsToExport);
                     File.WriteAllText(sfd.FileName, jsonString);
                 } else {
                     ShowPopUp("Oops, problem getting file.");

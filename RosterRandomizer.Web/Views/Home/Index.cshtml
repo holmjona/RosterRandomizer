@@ -3,6 +3,19 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4>Choose an Option</h4>
+    <div>
+        <p>Upload a class roster</p>
+        @using (Html.BeginForm("FromFile", "StudentRoster", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+            <input type="file" id="fupImport" name="file" />
+            <input type="submit" value="Begin" />
+        }
+    </div>
+    <div>
+        <p>Enter an existing class code.</p>
+        @using (Html.BeginForm("FromCode", "StudentRoster", FormMethod.Get)) {
+            <input type="text" id="txtCode" name="enteredcode" />
+            <input type="submit" value="Continue" />
+        }
+    </div>
 </div>

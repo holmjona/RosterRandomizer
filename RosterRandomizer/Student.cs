@@ -11,7 +11,9 @@ namespace RosterRandomizer {
         private string _FirstName;
         private string _LastName;
         private string _Email;
-        private bool _InClass = true;
+        // null flag allows us to know if the list has been exported yet.
+        // null means first import, true or false means has been exported and reloaded.
+        private bool? _InClass = null;
         private bool _IsSelected = false;
         private List<string> _Tags;
 
@@ -52,8 +54,13 @@ namespace RosterRandomizer {
 
         [JsonPropertyName("inclass")]
         public bool InClass {
-            get { return _InClass; }
+            get { return _InClass != false; }
             set { _InClass = value; }
+        }
+
+        public bool IsFromExported {
+            get { return _InClass != null; }
+
         }
 
         public bool IsSelected {

@@ -2,70 +2,155 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
+
+
+/*Student Cards --Begin--*/
+#student-roster {
+    list-style-type: none;
+    padding: 0;
+}
+
+.student-card {
+    border: 3px solid #28B;
+    width: 8em;
+    height: 6.5em;
+    float: left;
+    text-align: center;
+    margin: .3em;
+    padding: 1em;
+    background-color: #4AD; /*ACF*/
+    position: relative;
+    border-radius: 1em;
+    cursor:pointer;
+}
+
+    .student-card.absent {
+        background-color: #AAA;
+        border-color: #888;
+        cursor:not-allowed;
+    }
+
+    .student-card.picked {
+        background-color: #4A4;
+        border-color: #282;
+    }
+
+    .student-card h1 {
+        font-size: 1em;
+        width: 100%;
+        overflow: hidden;
+    }
+
+        .student-card h1 .first-name {
+            font-size: 1.5em;
+            display:block;
+        }
+        .student-card h1 .last-name {
+            font-size: 1em;
+        }
+
+    .student-card button.reset {
+        font-size: .7em;
+        position:absolute;
+        left: 1em;
+        bottom: 0;
+        display:none;
+    }
+
+    .student-card .student-id {
+        font-size: 1.2em;
+        position: absolute;
+        right: 1em;
+        bottom: 0;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.60)
+    }
+
+    .student-card .student-check {
+        /*font-size: 2em;
+        height: 20px;
+        width: 20px;
+        position:absolute;
+        bottom: 1em;
+        left: 70px;*/
+        display:none;
+    }
+
+    .student-card.absent button.reset{
+        display:inline-block;
+    }
+    
+.float-reset{
+    clear:left;
+}
+    /*Student Cards --End--*/

@@ -1,0 +1,18 @@
+﻿@model IEnumerable<RosterRandomizer.Student>
+@{
+    ViewData["Title"] = "FromCode";
+}
+
+<h1>Class Code: @ViewBag.ClassCode</h1>
+<div class="actions">
+    <button id="btnPickRandomStudent">Pick Random Student</button>
+    <button id="btnExport">Export list</button>
+    <button id="btnCopyCode">Copy Class Code to Clipboard</button>
+</div>
+<ol id="student-roster">
+@foreach(RosterRandomizer.Student stud in Model) {
+    <partial name="Parts/Card" model="stud" />
+}
+    </ol>
+<div class="float-reset"></div>
+    

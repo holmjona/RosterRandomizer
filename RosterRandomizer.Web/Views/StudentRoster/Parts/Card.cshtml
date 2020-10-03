@@ -1,0 +1,12 @@
+﻿@model RosterRandomizer.Student
+@{ 
+    string attended = Model.InClass ? "" : "absent";
+    string picked = Model.IsSelected ? "picked" : "";
+    string isChecked = Model.IsSelected ? "checked='checked'" : "";
+}
+<li class="student-card @attended @picked" id="student-@Model.ID">
+    <h1><span class="first-name">@Model.FirstName</span> <span class="last-name">@Model.LastName</span></h1>
+    <input class="student-check" @isChecked type="checkbox" id="chk-@Model.ID" name="chk-@Model.ID" />
+    <span class="student-id">@Model.ID</span>
+    <button class="reset" id="btnreset-@Model.ID" name="btnreset-@Model.ID">Reset</button>
+</li>
