@@ -64,7 +64,7 @@ function changeCard(crd, reset, present) {
     var chk = crd.find("input:checkbox");
 
     $.ajax({
-        url: "UpdateStudent",
+        url: "StudentRoster/UpdateStudent",
         method: "post",
         data: {
             code: myCode,
@@ -125,7 +125,7 @@ function replaceCardWithCurrent(attending = true) {
 
 function getRandomStudent() {
     $.ajax({
-        url: "GetRandom",
+        url: "StudentRoster/GetRandom",
         method: "post",
         data: {
             code: myCode
@@ -147,16 +147,30 @@ function getRandomStudent() {
 $("#btnPickRandomStudent").mouseup(getRandomStudent);
 
 $("#btnExport").mouseup(function () {
-    
+
 });
+
+
 $("#btnCopyCode").mouseup(function () {
-    //https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
-    var txt = document.getElementById("txtClassCode");
-    txt.select();
-    txt.setSelectionRange(0, 99999); // for mobile devices
-    document.execCommand("copy");
-    showMessage("Your class code has been copied to your clipboard.");
+    // https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+    var tBox = document.getElementById("txtClassCode");
+    // not selectable if disabled.
+    tBox.removeAttribute("disabled");
+    tBox.style.display = "inline";
+    tBox.select();
+    //tBox.setSelectionRange(0, 99999); // for mobile devices
+    var success = document.execCommand("copy");
+    if (success) {
+        showMessage("Your class code has been copied to your clipboard.");
+    } else {
+        showMessage("Not working.");
+    }
+    // return to disable to stop users from modifying
+    tBox.setAttribute("disabled", "disabled");
+    tBox.style.display = "none";
+
 });
+
 
 
 // Modal buttons
@@ -195,7 +209,7 @@ function delayStop() {
 
 function fillStudentList() {
     $.ajax({
-        url: "GetList",
+        url: "StudentRoster/GetList",
         method: "post",
         data: {
             code: myCode

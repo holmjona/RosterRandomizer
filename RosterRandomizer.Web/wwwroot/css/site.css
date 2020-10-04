@@ -73,8 +73,40 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
+.actions {
+    border: 1px solid #000;
+    position: fixed;
+    margin-right: auto;
+    width: 24em;
+    text-align: center;
+    bottom: 0;
+    right: 0;
+    z-index: 900;
+    background-color: #DDD;
+}
+
+    .actions button {
+        border: 3px solid #888;
+        background-color: #AAA;
+        height: 60px;
+        width: 150px;
+        border-radius: 1em;
+        margin: .5em;
+    }
+
+        .actions button:hover {
+            border-color: #28B;
+            background-color: #4AD;
+        }
+
 
 /*Student Cards --Begin--*/
+#txtClassCode {
+    /*display:none;*/
+    position: absolute;
+    left: -9999px;
+}
+
 #student-roster {
     list-style-type: none;
     padding: 0;
@@ -94,62 +126,63 @@ body {
     cursor: pointer;
 }
 
-    .student-card.absent {
-        background-color: #AAA;
-        border-color: #888;
-        cursor: not-allowed;
-    }
-
     .student-card.picked {
         background-color: #4A4;
         border-color: #282;
     }
 
-    .student-card h1 {
+/*set higher specifity because absent has higher effect than picked*/
+li.student-card.absent {
+    background-color: #AAA;
+    border-color: #888;
+    cursor: not-allowed;
+}
+
+.student-card h1 {
+    font-size: 1em;
+    width: 100%;
+    overflow: hidden;
+}
+
+    .student-card h1 .first-name {
+        font-size: 1.5em;
+        display: block;
+    }
+
+    .student-card h1 .last-name {
         font-size: 1em;
-        width: 100%;
-        overflow: hidden;
     }
 
-        .student-card h1 .first-name {
-            font-size: 1.5em;
-            display: block;
-        }
+.student-card button.reset {
+    font-size: .7em;
+    position: absolute;
+    left: 1em;
+    bottom: 0;
+    display: none;
+}
 
-        .student-card h1 .last-name {
-            font-size: 1em;
-        }
+.student-card .student-id {
+    font-size: 1.2em;
+    position: absolute;
+    right: 1em;
+    bottom: 0;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.60)
+}
 
-    .student-card button.reset {
-        font-size: .7em;
-        position: absolute;
-        left: 1em;
-        bottom: 0;
-        display: none;
-    }
-
-    .student-card .student-id {
-        font-size: 1.2em;
-        position: absolute;
-        right: 1em;
-        bottom: 0;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.60)
-    }
-
-    .student-card .student-check {
-        /*font-size: 2em;
+.student-card .student-check {
+    /*font-size: 2em;
         height: 20px;
         width: 20px;
         position:absolute;
         bottom: 1em;
         left: 70px;*/
-        display: none;
-    }
+    display: none;
+}
 
-    .student-card.absent button.reset {
-        display: inline-block;
-    }
+.student-card.absent button.reset {
+    display: inline-block;
+}
 
 .float-reset {
     clear: left;
@@ -161,13 +194,13 @@ body {
     font-weight: bold;
     color: #A00;
     padding: 1em;
-    text-align:center;
+    text-align: center;
     width: 90%;
     margin: 5%;
     margin-top: 0;
     background-color: #CCC;
     z-index: 1000;
-    position:absolute;
+    position: absolute;
     top: 0;
     left: 0;
     border-radius: 0 0 1em 1em;
@@ -182,15 +215,15 @@ body {
     height: 100%;
     background-color: rgba(23, 23, 23, 0.75);
     z-index: 999;
-    display:none;
+    display: none;
 }
 
-#loader{
+#loader {
     border: 1px solid #AAA;
     height: 100%;
     width: 100%;
     padding-top: 15%;
-    position:absolute;
+    position: absolute;
     top: 0;
     left: 0;
     background-color: #FFF;
@@ -206,10 +239,11 @@ body {
     text-align: center;
     background-color: #FFF;
     border-radius: 1em;
-    position:relative;
+    position: relative;
 }
-    #modal .closer{
-        position:absolute;
+
+    #modal .closer {
+        position: absolute;
         top: 0;
         right: 1em;
     }
@@ -218,7 +252,7 @@ body {
         padding: 0;
         list-style: none;
         display: inline-block;
-        font-size: 2em;
+        font-size: 1.25em;
         margin-top: 1em;
     }
 
@@ -239,8 +273,8 @@ body {
             #modal ul#modalControls li button {
                 border: 3px solid #888;
                 background-color: #AAA;
-                height: 75px;
-                min-width: 75px;
+                height: 50px;
+                min-width: 50px;
                 border-radius: 1em;
                 margin: .5em;
             }
@@ -249,3 +283,23 @@ body {
                     border-color: #28B;
                     background-color: #4AD;
                 }
+
+@media only screen and (min-width: 800px) {
+    .actions {
+        width: 24em;
+        text-align: center;
+        top: 3.5em;
+        right: 15%;
+        height: 75px;
+    }
+
+    #modal ul#cardHolder {
+        font-size: 2em;
+    }
+
+    #modal ul#modalControls li button {
+        font-size: 1.25em;
+        height: 75px;
+        min-width: 75px;
+    }
+}

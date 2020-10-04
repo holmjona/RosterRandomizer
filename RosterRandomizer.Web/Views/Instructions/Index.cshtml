@@ -3,5 +3,116 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
+
+<h2>Getting you roster from Moodle</h2>
+<p>This application is designed to use the Roster (in JSON format) from your Moodle course.</p>
+
+<h2>To get your Roster in Moodle.</h2>
+<ol>
+    <li>Login to Moodle at https://elearn.isu.edu/ </li>
+    <li>Navigate to the correct couse from your Dashboard.</li>
+    <li>
+        Navigate to the participants list for your course.
+        <ol>
+            <li>
+                You can click the gear in the top right corner of the page, under your picture.
+                <ol>
+                    <li>Click More....</li>
+                    <li>Click the Users tab.</li>
+                    <li>Click the Enrolled users link.</li>
+                </ol>
+            </li>
+            <li>
+                You can click on the Participants link under the course name on the left side of the page.
+                <ol>
+                    <li>You may have to click on the hamburger button in the top left corner of the page.</li>
+                </ol>
+            </li>
+        </ol>
+    </li>
+    <li>
+        On the Participants page, scroll to the bottom of the page.
+        <ol>
+            <li>
+                Click the button select all ## users (this will be relative to the number of students in you class).
+                <ol>
+                    <li>This may reload the page and you will have to scroll to the bottom again.</li>
+                    <li>If you do not want a person listed in you downloaded roster, uncheck them in the list.</li>
+                </ol>
+            </li>
+            <li>In the drop down list at the bottom of the list, pick the option Javascript Object Notation (.json) listed under Download table data as.
+            <li>
+                This will start a download of your class roster as a JSON file.
+                <ol>
+                    <li>Save this file to a location on your computer where you can find it.</li>
+                </ol>
+            </li>
+    </li>
+</ol>
+        </li>
+    </ol>
+
+
+<h2>Making your own roster</h2>
+<p>You can also create your own roster using the following JSON format:</p>
+<h3>Fields</h3>
+<dl>
+    <dt>firstname</dt>
+    <dd>(REQUIRED)</dd>
+    <dd>student's first (given) name.</dd>
+    <dt>lastname</dt>
+    <dd>(REQUIRED)</dd>
+    <dd>student's last (sur) name.</dd>
+    <dt>email</dt>
+    <dd>(REQUIRED)</dd>
+    <dd>student's email address (must be unique to the rest of the list).</dd>
+    <dt>ID</dt>
+    <dd>(optional)</dd>
+    <dd>unique integer value for this student in the list.</dd>
+    <dt>tags</dt>
+    <dd>(optional)</dd>
+    <dd>list/array of tags that identify the student. These can be non-unique.</dd>
+    <dt>inclass</dt>
+    <dd>(optional)</dd>
+    <dd>true|false - whether the student is considered in class.</dd>
+    <dd>Students not "in class" will be ignorged when randomly picking a student from the list.</dd>
+</dl>
+
+<p>You can create your own Roster following the following format:</p>
+<pre>
+[
+   [
+      {
+         "ID":0,
+         "firstname":"John", "lastname":"Doe", "email":"doejohn@isu.edu",
+         "inclass":true, "tags":["Pocatello"]
+      }
+      ,
+      {
+         "ID":1,
+         "firstname":"Jane", "lastname":"Doe", "email":"doejane@isu.edu",
+         "inclass":true, "tags":["Pocatello","ADA"]
+      }
+      ,
+      {
+         "ID":2,
+         "firstname":"John", "lastname":"Hancock", "email":"hancjohn@isu.edu",
+         "inclass":true, "tags":["Idaho Falls","honors"]
+      }
+      ,
+      {
+         "ID":3,
+         "firstname":"Tracy", "lastname":"Mitchell", "email":"tracy.mitchell@gmail.com",
+         "inclass":false, "tags":["Pocatello"]
+      }
+         ,
+      // etc.
+   ]
+]
+        </pre>
+
+<p><strong>Note:</strong> Make sure to save the file with the JSON extension (.json).</p>
+
+
 

@@ -18,7 +18,23 @@ namespace RosterRandomizer.Web.Controllers {
         }
 
 
-        public IActionResult Index() {
+        public async Task<IActionResult> Index() {
+            if (Request.Cookies["code"] != null) {
+                string code = Request.Cookies["code"];
+                List<Student> students = await GetStudentFromCode(code);
+                //TODO: Need to make sure file exists.
+
+                // check to see if upgraded file type
+                int numberNotExported = students.Count(s => !s.IsFromExported);
+                // assume if not Exported then it is a fresh list and needs to be converted to new format.
+                if (numberNotExported > 0) {
+                    // If not, convert to new upgraded JSON list
+                    int num = await UpdateStudents(students, code);
+                }
+                ViewBag.code = code;
+                return View(students);
+            }
+
             return View();
         }
 
@@ -58,24 +74,13 @@ namespace RosterRandomizer.Web.Controllers {
             return newFilePath;
         }
 
-        public async Task<IActionResult> FromCode(string code, string enteredcode) {
-
-            if (!string.IsNullOrEmpty(enteredcode)) {
-                code = enteredcode;
+        public IActionResult FromCode(string code) {
+            if (!string.IsNullOrEmpty(code)) {
+                Response.Cookies.Append("code", code);
+                return RedirectToAction("Index");
+            } else {
+               return RedirectToAction("Index", "Home");
             }
-
-            List<Student> students = await GetStudentFromCode(code);
-            //TODO: Need to make sure file exists.
-
-            // check to see if upgraded file type
-            int numberNotExported = students.Count(s => !s.IsFromExported);
-            // assume if not Exported then it is a fresh list and needs to be converted to new format.
-            if (numberNotExported > 0) {
-                // If not, convert to new upgraded JSON list
-            }
-
-            ViewBag.code = code;
-            return View(students);
         }
 
         private async Task<List<Student>> GetStudentFromCode(string code) {
