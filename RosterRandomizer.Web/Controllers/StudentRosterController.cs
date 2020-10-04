@@ -13,7 +13,6 @@ namespace RosterRandomizer.Web.Controllers {
     public class StudentRosterController : Controller {
         //https://www.mikesdotnetting.com/Article/302/server-mappath-equivalent-in-asp-net-core
         IWebHostEnvironment _HostingEnvironment;
-        private static readonly Dictionary<string, SemaphoreSlim> _SlimDict = new Dictionary<string, SemaphoreSlim>();
         public StudentRosterController(IWebHostEnvironment ihost) {
             _HostingEnvironment = ihost;
         }
@@ -38,13 +37,13 @@ namespace RosterRandomizer.Web.Controllers {
                 string newCode = Hasher.getRandomKey();
                 string newFilePath = getFilePath(newCode);
                 populateSemaphore(newCode);
-                await _SlimDict[newCode].WaitAsync();
+                await DataStore.Semaphores[newCode].WaitAsync();
                 try {
                     using (FileStream str = new FileStream(newFilePath, FileMode.Create)) {
                         await file.CopyToAsync(str);
                     }
                 } finally {
-                    _SlimDict[newCode].Release();
+                    DataStore.Semaphores[newCode].Release();
                 }
                 return RedirectToAction("FromCode", new { code = newCode });
             }
@@ -84,11 +83,11 @@ namespace RosterRandomizer.Web.Controllers {
             string filePath = getFilePath(code);
             string fileContent;
             populateSemaphore(code);
-            await _SlimDict[code].WaitAsync();
+            await DataStore.Semaphores[code].WaitAsync();
             try {
                 fileContent = await System.IO.File.ReadAllTextAsync(filePath);
             } finally {
-                _SlimDict[code].Release();
+                DataStore.Semaphores[code].Release();
             }
             retList = DataStore.ParseStudents(fileContent);
             return retList;
@@ -96,8 +95,8 @@ namespace RosterRandomizer.Web.Controllers {
 
         private void populateSemaphore(string code) {
             // make sure code has a semaphore
-            if (!_SlimDict.ContainsKey(code)) {
-                _SlimDict.Add(code, new SemaphoreSlim(1, 1));
+            if (!DataStore.Semaphores.ContainsKey(code)) {
+                DataStore.Semaphores.Add(code, new SemaphoreSlim(1, 1));
             }
 
         }
@@ -107,11 +106,11 @@ namespace RosterRandomizer.Web.Controllers {
             string filePath = getFilePath(code);
 
             populateSemaphore(code);
-            await _SlimDict[code].WaitAsync();
+            await DataStore.Semaphores[code].WaitAsync();
             try {
                 await System.IO.File.WriteAllTextAsync(filePath, newJson);
             } finally {
-                _SlimDict[code].Release();
+                DataStore.Semaphores[code].Release();
             }
             return 1;
         }
@@ -126,7 +125,7 @@ namespace RosterRandomizer.Web.Controllers {
                     stud.IsSelected = false;
                     stud.InClass = true;
                 } else {
-                    stud.IsSelected = isSelected;
+                    stud.IsSelected = isSelected && inClass;
                     stud.InClass = inClass;
                 }
             }
@@ -165,6 +164,11 @@ namespace RosterRandomizer.Web.Controllers {
             return PartialView("Parts/Card", stud);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GetList(string code) {
+            List<Student> students = await GetStudentFromCode(code);
+            return PartialView("Parts/List", students);
+        }
 
     }
 }

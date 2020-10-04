@@ -2,11 +2,13 @@
 @{
     ViewData["Title"] = "FromCode";
 }
-
-<h1>Class Code: @ViewBag.ClassCode</h1>
+<div id="page-message">
+    Test Message.
+</div>
+<h1>Class Code: <input id="txtClassCode" contenteditable="false" disabled value="@ViewBag.code" /></h1>
 <div class="actions">
     <button id="btnPickRandomStudent">Pick Random Student</button>
-    <button id="btnExport">Export list</button>
+    @*<button id="btnExport">Export list</button>*@
     <button id="btnCopyCode">Copy Class Code to Clipboard</button>
 </div>
 <div id="roster-container">
@@ -18,9 +20,6 @@
 <div id="shadowBox">
     <div id="modal">
         <a class="closer" href="#">Close</a>
-        <div id="modal-message">
-
-        </div>
         <ul id="cardHolder">
         </ul>
         <ul id="modalControls">
@@ -34,6 +33,9 @@
                 <button id="btnAbsentAnother">Not here; pick another.</button>
             </li>
         </ul>
+        <div id="loader">
+            <img src="~/images/search.gif" />
+        </div>
     </div>
 </div>
 

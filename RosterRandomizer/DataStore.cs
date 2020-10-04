@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Windows.Controls;
 
 namespace RosterRandomizer {
@@ -11,6 +12,7 @@ namespace RosterRandomizer {
     /// </summary>
     public static class DataStore {
         private static Dictionary<string, Student> _Students;
+        public static readonly Dictionary<string, SemaphoreSlim> Semaphores = new Dictionary<string, SemaphoreSlim>();
 
         public static Dictionary<string, Student> Students {
             get {

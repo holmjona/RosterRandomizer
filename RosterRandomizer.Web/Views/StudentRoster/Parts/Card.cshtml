@@ -3,7 +3,7 @@
     string attended = Model.InClass ? "" : "absent";
     string picked = Model.IsSelected ? "picked" : "";
     string isChecked = Model.IsSelected ? "checked='checked'" : "";
-    string cardName = ViewBag.idHelper == null ? "student" : "temp";
+    string cardName = ViewBag.idHelper == null ? "student" : ViewBag.idHelper;
 }
 <li class="student-card @attended @picked" id="@cardName-@Model.ID">
     <h1><span class="first-name">@Model.FirstName</span> <span class="last-name">@Model.LastName</span></h1>

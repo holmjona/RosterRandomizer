@@ -5,17 +5,17 @@
 
 var currentCard = null;
 
-$("#student-roster").mouseup(function (e) {
+$("#roster-container").mouseup(function (e) {
     e = e || window.event;
     var tar = $(e.target);
     var card = getParentCard(tar);
     if (tar.is("button")) {
         // reset above all else
         //card.removeClass("absent").removeClass("picked");
-        changeCard(card, true,true);
+        changeCard(card, true, true);
     } else {
         //toggleCard(card);
-        updateStudent(card);
+        handleCardClick(card);
     }
 });
 
@@ -42,12 +42,13 @@ function toggleCard(crd) {
     }
 }
 
-function updateStudent(crd) {
-    if (crd.hasClass("absent")) {
+function handleCardClick(crd, attending = true) {
+    var isAbsent = crd.hasClass("absent");
+    if (isAbsent) {
         // do nothing
+        // ignore clicks on absent students.
     } else {
-        var isAbsent = crd.hasClass("absent");
-        changeCard(crd,false,!isAbsent);
+        changeCard(crd, false, !isAbsent && attending);
     }
 }
 
@@ -76,7 +77,7 @@ function changeCard(crd, reset, present) {
             //alert(crd + "\n\n " +newCrd);
             crd.replaceWith(newCrd);
         },
-        error: function (err,msg) {
+        error: function (err, msg) {
             alert(msg);
         }
 
@@ -92,7 +93,8 @@ function showModal(showMe) {
             var studId = idParts[1];
             if (action === "reset") {
                 // list has been reset.
-
+                showMessage("You have used all of the students in the list. The list was reset.");
+                fillStudentList();
             }
         }
         $("#cardHolder").empty().append(currentCard);
@@ -102,23 +104,20 @@ function showModal(showMe) {
     }
 }
 
-function replaceCard() {
+function replaceCardWithCurrent(attending = true) {
     if (currentCard !== null) {
         var crd = $(currentCard);
         var idParts = crd[0].id.split("-");
         var action = idParts[0];
         var studId = idParts[1];
-        if (action === "reset") {
-            //reset whole list
-        } else {
-            // update single card
-            var cardId = "student-" + studId;
-            var oldCard = $("#" + cardId);
-            //oldCard.replaceWith(crd);
-            //crd.attr("id", cardId);
-            updateStudent(oldCard);
-            currentCard = null;
-        }
+        // update single card
+        var cardId = "student-" + studId;
+        var oldCard = $("#" + cardId);
+        //oldCard.replaceWith(crd);
+        //crd.attr("id", cardId);
+        // keep consistent with click behavior
+        handleCardClick(oldCard, attending);
+        currentCard = null;
     } else {
         alert("Oops no card to replace.");
     }
@@ -146,11 +145,17 @@ function getRandomStudent() {
 
 // Action buttons.
 $("#btnPickRandomStudent").mouseup(getRandomStudent);
-$("#btnExport").mouseup(function () {
 
+$("#btnExport").mouseup(function () {
+    
 });
 $("#btnCopyCode").mouseup(function () {
-
+    //https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+    var txt = document.getElementById("txtClassCode");
+    txt.select();
+    txt.setSelectionRange(0, 99999); // for mobile devices
+    document.execCommand("copy");
+    showMessage("Your class code has been copied to your clipboard.");
 });
 
 
@@ -160,15 +165,56 @@ $("#modal a.closer").mouseup(function () {
 });
 
 $("#btnOK").mouseup(function () {
-    replaceCard(currentCard);
+    replaceCardWithCurrent();
     showModal(false);
 });
 
 $("#btnOKAnother").mouseup(function () {
-    replaceCard(currentCard);
-    getRandomStudent();
+    replaceCardWithCurrent();
+    //HACK: delay get random to eliminate file locks on the server.
+    delay(getRandomStudent, 1000);
 });
 
 $("#btnAbsentAnother").mouseup(function () {
-
+    showMessage("Student will be unavailable for random selection. You can reset the student to return them to the list.");
+    replaceCardWithCurrent(false); // not attending.
+    //HACK: delay get random to eliminate file locks on the server.
+    delay(getRandomStudent, 1000);
 });
+
+
+function delay(action, time) {
+    $("#loader").show();
+    setTimeout(action, time);
+    setTimeout(delayStop, time * 1.1);
+}
+
+function delayStop() {
+    $("#loader").hide();
+}
+
+function fillStudentList() {
+    $.ajax({
+        url: "GetList",
+        method: "post",
+        data: {
+            code: myCode
+        },
+        success: function (newList) {
+            $("#roster-container").empty().append(newList);
+        },
+        error: function (err, msg) {
+            alert(msg);
+        }
+
+    });
+}
+
+function showMessage(txt) {
+    var mess = $("#page-message");
+    mess.text(txt);
+    mess.slideDown();
+    setTimeout(function () {
+        mess.slideUp(1000);
+    }, 5000);
+}

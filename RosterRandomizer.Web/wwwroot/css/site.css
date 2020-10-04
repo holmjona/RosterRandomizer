@@ -156,6 +156,24 @@ body {
 }
 /*Student Cards --End--*/
 
+/*Modal --Start--*/
+#page-message {
+    font-weight: bold;
+    color: #A00;
+    padding: 1em;
+    text-align:center;
+    width: 90%;
+    margin: 5%;
+    margin-top: 0;
+    background-color: #CCC;
+    z-index: 1000;
+    position:absolute;
+    top: 0;
+    left: 0;
+    border-radius: 0 0 1em 1em;
+    display: none;
+}
+
 #shadowBox {
     position: fixed;
     top: 0;
@@ -165,6 +183,19 @@ body {
     background-color: rgba(23, 23, 23, 0.75);
     z-index: 999;
     display:none;
+}
+
+#loader{
+    border: 1px solid #AAA;
+    height: 100%;
+    width: 100%;
+    padding-top: 15%;
+    position:absolute;
+    top: 0;
+    left: 0;
+    background-color: #FFF;
+    border-radius: .9em;
+    display: none;
 }
 
 #modal {
