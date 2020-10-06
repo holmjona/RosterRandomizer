@@ -21,7 +21,7 @@ namespace RosterRandomizer.Web.Controllers {
         public async Task<IActionResult> Index() {
             if (Request.Cookies["code"] != null) {
                 string code = Request.Cookies["code"];
-                List<Student> students = await GetStudentFromCode(code);
+                List<Student> students = await GetStudents(code);
                 //TODO: Need to make sure file exists.
 
                 // check to see if upgraded file type
@@ -61,7 +61,16 @@ namespace RosterRandomizer.Web.Controllers {
                 } finally {
                     DataStore.Semaphores[newCode].Release();
                 }
+                List<Student> students = await GetStudents(newCode);
+                // give each student a unique ID.
+                int num = 0;
+                foreach(Student st in students) {
+                    st.ID = num++;
+                }
+                await UpdateStudents(students, newCode);
                 return RedirectToAction("FromCode", new { code = newCode });
+            } else {
+                // File was empty.
             }
             return RedirectToAction("Index", "Home");
         }
@@ -83,7 +92,7 @@ namespace RosterRandomizer.Web.Controllers {
             }
         }
 
-        private async Task<List<Student>> GetStudentFromCode(string code) {
+        private async Task<List<Student>> GetStudents(string code) {
             List<Student> retList;
             string filePath = getFilePath(code);
             string fileContent;
@@ -96,6 +105,18 @@ namespace RosterRandomizer.Web.Controllers {
             }
             retList = DataStore.ParseStudents(fileContent);
             return retList;
+        }
+
+        public async Task<IActionResult> GetStudentsFile(string code) {
+            List<Student> students = await GetStudents(code);
+            try {
+                using (FileStream fs = new FileStream(getFilePath(code), FileMode.Open)) {
+
+                    return File(fs, "text/json", code + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
+                }
+            } catch {
+                return NotFound();
+            }
         }
 
         private void populateSemaphore(string code) {
@@ -122,7 +143,7 @@ namespace RosterRandomizer.Web.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> UpdateStudent(string code, int studentid, bool isSelected, bool inClass, bool reset) {
-            List<Student> students = await GetStudentFromCode(code);
+            List<Student> students = await GetStudents(code);
             Student stud = students.FirstOrDefault(s => s.ID == studentid);
 
             if (stud != null) {
@@ -140,7 +161,7 @@ namespace RosterRandomizer.Web.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> GetRandom(string code) {
-            List<Student> students = await GetStudentFromCode(code);
+            List<Student> students = await GetStudents(code);
             int countAvailable = students.Count(s => s.InClass == true
                                                  && s.IsSelected == false);
             ViewBag.idHelper = "random";
@@ -161,17 +182,13 @@ namespace RosterRandomizer.Web.Controllers {
                                                  && s.InClass == true
                                                  && s.IsSelected == false);
             }
-            // now mark student selected.
-            //stud.IsSelected = true;
-            // save list.
-            int answer = await UpdateStudents(students, code);
-
+            
             return PartialView("Parts/Card", stud);
         }
 
         [HttpPost]
         public async Task<IActionResult> GetList(string code) {
-            List<Student> students = await GetStudentFromCode(code);
+            List<Student> students = await GetStudents(code);
             return PartialView("Parts/List", students);
         }
 
