@@ -14,6 +14,7 @@ namespace RosterRandomizer.Web.Controllers {
         //https://www.mikesdotnetting.com/Article/302/server-mappath-equivalent-in-asp-net-core
         IWebHostEnvironment _HostingEnvironment;
         public StudentRosterController(IWebHostEnvironment ihost) {
+            // to be able to get the absolute address to a file.
             _HostingEnvironment = ihost;
         }
 
@@ -64,7 +65,7 @@ namespace RosterRandomizer.Web.Controllers {
                 List<Student> students = await GetStudents(newCode);
                 // give each student a unique ID.
                 int num = 0;
-                foreach(Student st in students) {
+                foreach (Student st in students) {
                     st.ID = num++;
                 }
                 await UpdateStudents(students, newCode);
@@ -88,7 +89,7 @@ namespace RosterRandomizer.Web.Controllers {
                 Response.Cookies.Append("code", code);
                 return RedirectToAction("Index");
             } else {
-               return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -108,15 +109,43 @@ namespace RosterRandomizer.Web.Controllers {
         }
 
         public async Task<IActionResult> GetStudentsFile(string code) {
-            List<Student> students = await GetStudents(code);
+            //List<Student> students = await GetStudents(code);
+            //using (MemoryStream ms = new MemoryStream()) {
             try {
-                using (FileStream fs = new FileStream(getFilePath(code), FileMode.Open)) {
-
-                    return File(fs, "text/json", code + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
+                string filePath = getFilePath(code);
+                using (FileStream fs = new FileStream(filePath, FileMode.Open)) {
+                    //await fs.CopyToAsync(ms);
+                    string fileType = "text/json";
+                    string fileName = code + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json";
+                    //ms.Position = 0;
+                    //return File(fs, fileType, fileName);
+                    //HACK: using file stream which is what I kept finding online let to a 
+                    // error of using a closed stream. Even tried copying to a memory stream.
+                    // Only way I could get it to work was by converting the stream to a byte array.
+                    // I do not like solution, but it works. 
+                    byte[] fileData = GetBytes(fs);
+                    return File(fileData, fileType, fileName);
                 }
-            } catch {
+            } catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return NotFound();
+            } finally {
+
             }
+            //}
+        }
+
+        private byte[] GetBytes(Stream stream) {
+            // set to start of file.
+            // fs.Seek(0, SeekOrigin.Begin);
+            long fileSize = stream.Length;
+            byte[] myBytes = new byte[fileSize];
+            for (long i = 0; i < fileSize; i++) {
+                //fs.WriteByte(myBytes[i]);
+                //HACK: I had to do it this way nothing else worked.
+                myBytes[i] = (byte)stream.ReadByte();
+            }
+            return myBytes;
         }
 
         private void populateSemaphore(string code) {
@@ -182,7 +211,7 @@ namespace RosterRandomizer.Web.Controllers {
                                                  && s.InClass == true
                                                  && s.IsSelected == false);
             }
-            
+
             return PartialView("Parts/Card", stud);
         }
 

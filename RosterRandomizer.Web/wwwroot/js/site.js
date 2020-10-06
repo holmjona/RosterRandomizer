@@ -147,7 +147,20 @@ function getRandomStudent() {
 $("#btnPickRandomStudent").mouseup(getRandomStudent);
 
 $("#btnExport").mouseup(function () {
+    $.ajax({
+        url: "StudentRoster/GetStudentsFile",
+        method: "post",
+        data: {
+            code: myCode
+        },
+        success: function (data) {
+            window.location = "StudentRoster/GetStudentsFile"
+        },
+        error: function (err, msg) {
+            alert(msg);
+        }
 
+    });
 });
 
 

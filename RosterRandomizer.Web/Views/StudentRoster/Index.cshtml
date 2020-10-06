@@ -6,9 +6,9 @@
     Test Message.
 </div>
 <h1>Your Roster</h1>
+<a asp-action="GetStudentsFile" asp-route-code="@ViewBag.code">Export List</a>
 <div class="actions">
     <button id="btnPickRandomStudent">Pick Random Student</button>
-    @*<button id="btnExport">Export list</button>*@
     <button id="btnCopyCode">Copy Class Code to Clipboard</button>
     <input id="txtClassCode" disabled value="@ViewBag.code" />
 </div>
