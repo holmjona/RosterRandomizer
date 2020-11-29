@@ -1,0 +1,19 @@
+﻿<Window x:Class="RosterRandomizer.Attendance"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RosterRandomizer"
+        mc:Ignorable="d"
+        Title="Attendance" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Button x:Name="btnPickFolder" Click="btnPickFolder_Click">Pick the folder where all rosters were exported.</Button>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel x:Name="stkOutput"></StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

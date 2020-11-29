@@ -381,5 +381,10 @@ namespace RosterRandomizer {
             _BoxSize = sldBoxSize.Value;
             FillWrapPanel();
         }
+
+        private void miAttendanceReport_Click(object sender, RoutedEventArgs e) {
+            Attendance frm = new Attendance();
+            frm.ShowDialog();
+        }
     }
 }

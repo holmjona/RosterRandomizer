@@ -22,6 +22,9 @@
                 <Separator />
                 <MenuItem x:Name="miExit" Header="_Exit" Click="miExit_Click"></MenuItem>
             </MenuItem>
+            <MenuItem Header="_Tools" HorizontalAlignment="Left">
+                <MenuItem IsCheckable="True" x:Name="miAttendanceReport" Header="Attendance _Report" Click="miAttendanceReport_Click"></MenuItem>
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem x:Name="miWhereGetRoster" Header="Where do I get my _Roster?" Click="miWhereGetRoster_Click" ></MenuItem>
                 <MenuItem x:Name="miWhatFileFormat" Header="What is the file format?" Click="miWhatFileFormat_Click" ></MenuItem>
