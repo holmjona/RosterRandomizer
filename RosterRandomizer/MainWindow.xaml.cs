@@ -48,7 +48,7 @@ namespace RosterRandomizer {
                 foreach (Student stud in students) {
                     DataStore.Students.AddUnique(stud.Email, stud);
                 }
-                FillWrapPanel();
+                FillWrapPanel(false);
             } else {
                 ShowPopUp("Oops, problem getting file.");
             }
@@ -57,12 +57,12 @@ namespace RosterRandomizer {
         /// <summary>
         /// Fills the Wrap Panel with students.
         /// </summary>
-        private void FillWrapPanel() {
+        private void FillWrapPanel(bool? showFullNames) {
             wpStudents.Children.Clear();
             int studentNumber = 0;
             foreach (Student stud in DataStore.Students.Values) {
                 stud.ID = studentNumber;
-                MakeStudentGrid(stud);
+                MakeStudentGrid(stud, showFullNames);
                 studentNumber++;
             }
             foreach (Student stud in DataStore.Students.Values) {
@@ -75,7 +75,7 @@ namespace RosterRandomizer {
         /// Make the student card.
         /// </summary>
         /// <param name="stud">Student to populate card about.</param>
-        private void MakeStudentGrid(Student stud) {
+        private void MakeStudentGrid(Student stud, bool? showFullNames) {
             Grid grd = new Grid();
             grd.Width = _BoxSize;
             grd.Height = _BoxSize;
@@ -93,7 +93,13 @@ namespace RosterRandomizer {
             tbName.Style = App.Current.Resources["styTextStudent"] as Style;
             tbName.Inlines.Add(new Run(stud.FirstName));
             tbName.Inlines.Add(new LineBreak());
-            tbName.Inlines.Add(new Run(stud.LastName));
+            string lastNameToShow = "";
+            if (showFullNames == true) {
+                lastNameToShow = stud.LastName;
+            } else {
+                lastNameToShow = stud.LastName[0].ToString();
+            }
+                tbName.Inlines.Add(new Run(lastNameToShow));
             vbName.Child = tbName;
             grd.Children.Add(vbName);
             // checkbox
@@ -283,7 +289,7 @@ namespace RosterRandomizer {
                 Student lastStudentAdded = DataStore.Students.Values.Last();
                 int newID = DataStore.Students.Count();
                 lastStudentAdded.ID = newID;
-                MakeStudentGrid(lastStudentAdded);
+                MakeStudentGrid(lastStudentAdded, chkShowFullNames.IsChecked);
             }
 
         }
@@ -300,7 +306,7 @@ namespace RosterRandomizer {
                 if (frm.AddSuccessful) {
                     // Student email changed
                 }
-                FillWrapPanel();
+                FillWrapPanel(chkShowFullNames.IsChecked);
             } else {
                 ShowPopUp("Could not find the student to edit.");
             }
@@ -379,12 +385,20 @@ namespace RosterRandomizer {
 
         private void sldBoxSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             _BoxSize = sldBoxSize.Value;
-            FillWrapPanel();
+            FillWrapPanel(chkShowFullNames.IsEnabled == true);
         }
 
         private void miAttendanceReport_Click(object sender, RoutedEventArgs e) {
             Attendance frm = new Attendance();
             frm.ShowDialog();
+        }
+
+        private void chkShowFullNames_Checked(object sender, RoutedEventArgs e) {
+            FillWrapPanel(chkShowFullNames.IsChecked);
+        }
+
+        private void chkShowFullNames_Unchecked(object sender, RoutedEventArgs e) {
+            chkShowFullNames_Checked(null, null);
         }
     }
 }
