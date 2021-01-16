@@ -41,6 +41,9 @@ namespace RosterRandomizer {
         /// <param name="e"></param>
         private void btnLoadRoster_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog ofd = new OpenFileDialog();
+            // clear roster first
+            DataStore.Clear();
+
             ofd.Filter = _JSONFileFilter;
             if (ofd.ShowDialog() == true) {
                 String lines = File.ReadAllText(ofd.FileName);
