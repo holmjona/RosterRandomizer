@@ -108,6 +108,7 @@ namespace RosterRandomizer {
             chk.Name = "Check_" + stud.ID;
             // set state based on existing student state.
             chk.IsChecked = stud.IsSelected;
+            chk.IsEnabled = stud.InClass;
             chk.Checked += Student_Checked;
             chk.Tag = grd;
             vbCheck.Child = chk;
@@ -134,6 +135,12 @@ namespace RosterRandomizer {
             btnEdit.Style = App.Current.Resources["styEditStudentButton"] as Style;
             grd.Children.Add(btnEdit);
 
+            Button btnDelete = new Button();
+            btnDelete.Name = "Delete_" + stud.ID;
+            btnDelete.Click += BtnDelete_Click;
+            btnDelete.Style = App.Current.Resources["styDeleteStudentButton"] as Style;
+            grd.Children.Add(btnDelete);
+
             grd.Children.Add(tbNumber);
 
         }
@@ -151,19 +158,21 @@ namespace RosterRandomizer {
         /// <param name="e"></param>
         private void Student_Checked(object sender, RoutedEventArgs e) {
             CheckBox chk = null;
-            Grid g = null;
             string studNumber = ((FrameworkElement)sender).Name.Split("_")[1];
             // check to see if the checkbox or grid was clicked.
             if (sender.GetType() == typeof(CheckBox)) {
                 chk = (CheckBox)sender;
-                g = (Grid)chk.Tag;
+                
             } else if (sender.GetType() == typeof(Grid)) {
-                g = (Grid)sender;
+                Grid g =  (Grid)sender;
                 //string gNum = g.Name.Split("_")[1];
                 chk = (CheckBox)LogicalTreeHelper.FindLogicalNode(g, "Check_" + studNumber);
                 chk.IsChecked = !chk.IsChecked;
+            } else {
             }
             Student found = DataStore.GetStudent(studNumber);
+            // do not check absent students. 
+            if (found.InClass == false) chk.IsChecked = false;
             found.IsSelected = chk.IsChecked == true;
             UpdateStudentGridStyle(found);
         }
@@ -183,14 +192,17 @@ namespace RosterRandomizer {
         /// <param name="stud">Student associated with card.</param>
         private void UpdateStudentGridStyle(Student stud) {
             Grid studGrid = (Grid)LogicalTreeHelper.FindLogicalNode(wpStudents, "Grid_" + stud.ID);
+            CheckBox chkFound = (CheckBox)LogicalTreeHelper.FindLogicalNode(wpStudents, "Check_" + stud.ID);
             // check student attributes to decide which style to apply.
             if (stud.InClass) {
+                chkFound.IsEnabled = true;
                 if (stud.IsSelected) {
                     studGrid.Style = App.Current.Resources["styGridStudentChecked"] as Style;
                 } else {
                     studGrid.Style = App.Current.Resources["styGridStudent"] as Style;
                 }
             } else {
+                chkFound.IsEnabled = false;
                 studGrid.Style = App.Current.Resources["styGridStudentAbsent"] as Style;
             }
         }
@@ -218,7 +230,10 @@ namespace RosterRandomizer {
                     Student studFound = DataStore.Students[key];
                     ShowPopUp(studFound); // display student to user.
                     CheckBox chkFound = (CheckBox)LogicalTreeHelper.FindLogicalNode(wpStudents, "Check_" + studFound.ID);
-                    chkFound.IsChecked = true;
+                    // disable checkbox if not in class.
+                    chkFound.IsEnabled = studFound.InClass;
+                    // check student only if in class - do not want to select students where were not in class.
+                    chkFound.IsChecked = studFound.InClass;
                     Student_Checked(chkFound, null);
                     UpdateStudentGridStyle(studFound);
                     //if (!studFound.InClass) {
@@ -313,6 +328,22 @@ namespace RosterRandomizer {
 
         }
 
+        private void BtnDelete_Click(object sender, RoutedEventArgs e) {
+            Button btn = (Button)sender;
+            string[] idParts = btn.Name.Split("_");
+            int studentID = int.Parse(idParts[1]);
+            Student studToEdit = DataStore.Students.Values
+                .FirstOrDefault(s => s.ID == studentID);
+            if (studToEdit != null) {
+                // delete student; need to add confirmation check.
+                ShowPopUp("Currently not have to delete as student using this feature.");
+            } else {
+                ShowPopUp("Could not find the student to delete.");
+            }
+
+        }
+
+
         private void btnExportStudents_Click(object sender, RoutedEventArgs e) {
             if (DataStore.Students.Count > 0) {
                 SaveFileDialog sfd = new SaveFileDialog();
@@ -332,17 +363,14 @@ namespace RosterRandomizer {
             }
         }
 
-        private void btnResetSelected_Click(object sender, RoutedEventArgs e) {
-
-        }
-
+   
         private void btnResetMe_Click(object sender, RoutedEventArgs e) {
             Button btn = (Button)sender;
             string bNum = btn.Name.Split("_")[1];
             CheckBox chk = _StudentCheckBoxes.First(ch => ch.Name == "Check_" + bNum);
 
             Student found = DataStore.GetStudent(bNum);
-            found.InClass = true;
+            chk.IsEnabled = found.InClass = true;
             chk.IsChecked = found.IsSelected = false;
 
             UpdateStudentGridStyle(found);
@@ -399,6 +427,13 @@ namespace RosterRandomizer {
 
         private void chkShowFullNames_Unchecked(object sender, RoutedEventArgs e) {
             chkShowFullNames_Checked(null, null);
+        }
+
+        private void miMarkAllHere_Click(object sender, RoutedEventArgs e) {
+            foreach (Student currStudent in DataStore.Students.Values) {
+                currStudent.InClass = true;
+                UpdateStudentGridStyle(currStudent);
+            }
         }
     }
 }

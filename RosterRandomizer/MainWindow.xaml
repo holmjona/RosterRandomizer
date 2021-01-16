@@ -19,6 +19,9 @@
         <Menu Grid.Row="0" Grid.ColumnSpan="99">
             <MenuItem Header="_Options" HorizontalAlignment="Left">
                 <MenuItem IsCheckable="True" x:Name="miOnTop" Header="Keep Window On _Top" Click="miOnTop_Checked"></MenuItem>
+                <MenuItem x:Name="miAttendance" Header="_Attendance">
+                    <MenuItem x:Name="miMarkAllHere" Header="_All Here" Click="miMarkAllHere_Click"></MenuItem>
+                </MenuItem>
                 <Separator />
                 <MenuItem x:Name="miExit" Header="_Exit" Click="miExit_Click"></MenuItem>
             </MenuItem>

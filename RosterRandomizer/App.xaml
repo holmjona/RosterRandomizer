@@ -37,7 +37,13 @@
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Content" Value="*" />
             <Setter Property="ToolTip" Value="Edit this Student" />
+            <Setter Property="Padding" Value="1" />
             <Setter Property="FontSize" Value="8" />
+        </Style>
+        <Style TargetType="Button" x:Key="styDeleteStudentButton" BasedOn="{StaticResource styEditStudentButton}">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Content" Value="!" />
+            <Setter Property="ToolTip" Value="Delete this Student" />
         </Style>
         <Style TargetType="TextBlock" x:Key="styButtonText">
             <Setter Property="Margin" Value="2" />
