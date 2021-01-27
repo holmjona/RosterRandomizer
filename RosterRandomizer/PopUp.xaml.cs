@@ -28,10 +28,16 @@ namespace RosterRandomizer {
             btnOKAgain.Visibility = Visibility.Collapsed;
         }
 
-        public PopUp(Student stud, bool isTopMost) {
+        public PopUp(Student stud, bool isTopMost, bool showFullNames) {
             this.Topmost = isTopMost;
             InitializeComponent();
             _ThisStudent = stud;
+            tbName.Text = stud.FirstName;
+            if (showFullNames) {
+                tbName.Text += stud.LastName;
+            } else {
+                tbName.Text += stud.LastName[0].ToString();
+            }
             tbName.Text = stud.FullName;
         }
 

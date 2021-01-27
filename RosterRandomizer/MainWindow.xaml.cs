@@ -27,13 +27,37 @@ namespace RosterRandomizer {
         private static List<CheckBox> _StudentCheckBoxes = new List<CheckBox>();
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
         private double _BoxSize = 100;
+        private bool? _ListIsDirty = null;
 
         public MainWindow() {
             InitializeComponent();
             tbShowingOnTop.Visibility = Visibility.Hidden;
             // fix for odd menu behavior is likely found here:
             //https://stackoverflow.com/questions/4630954/wpf-menu-displays-to-the-left-of-the-window
+            this.Closing += MainWindow_Closing;
         }
+
+        private void Close_Application(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            if (_ListIsDirty == true) {
+                MessageBoxResult closingWindow = MessageBox.Show("You have not exported students for this session. Do you wish to save results?",
+                    "List Not Saved", MessageBoxButton.YesNoCancel);
+                if (closingWindow == MessageBoxResult.No) {
+                    Application.Current.Shutdown();
+                } else if (closingWindow == MessageBoxResult.Yes) {
+                    btnExportStudents_Click(sender, null);
+                    MainWindow_Closing(sender, e);
+                } else if (closingWindow == MessageBoxResult.Cancel) {
+                    e.Cancel = true; // cancel close.
+                }
+            } else {
+                Application.Current.Shutdown();
+            }
+        }
+
         /// <summary>
         /// Load Roster from file
         /// </summary>
@@ -52,6 +76,9 @@ namespace RosterRandomizer {
                     DataStore.Students.AddUnique(stud.Email, stud);
                 }
                 FillWrapPanel(false);
+                // assume loaded list will be resaved at the end of the session.
+                // this can always be cancelled or bypassed.
+                _ListIsDirty = true;
             } else {
                 ShowPopUp("Oops, problem getting file.");
             }
@@ -102,7 +129,7 @@ namespace RosterRandomizer {
             } else {
                 lastNameToShow = stud.LastName[0].ToString();
             }
-                tbName.Inlines.Add(new Run(lastNameToShow));
+            tbName.Inlines.Add(new Run(lastNameToShow));
             vbName.Child = tbName;
             grd.Children.Add(vbName);
             // checkbox
@@ -165,9 +192,9 @@ namespace RosterRandomizer {
             // check to see if the checkbox or grid was clicked.
             if (sender.GetType() == typeof(CheckBox)) {
                 chk = (CheckBox)sender;
-                
+
             } else if (sender.GetType() == typeof(Grid)) {
-                Grid g =  (Grid)sender;
+                Grid g = (Grid)sender;
                 //string gNum = g.Name.Split("_")[1];
                 chk = (CheckBox)LogicalTreeHelper.FindLogicalNode(g, "Check_" + studNumber);
                 chk.IsChecked = !chk.IsChecked;
@@ -208,6 +235,8 @@ namespace RosterRandomizer {
                 chkFound.IsEnabled = false;
                 studGrid.Style = App.Current.Resources["styGridStudentAbsent"] as Style;
             }
+            // student has been updated so assume that list has changed.
+            _ListIsDirty = true;
         }
 
         /// <summary>
@@ -265,7 +294,7 @@ namespace RosterRandomizer {
         private void ShowPopUp(object obj) {
             PopUp frm;
             if (obj.GetType() == typeof(Student)) {
-                frm = new PopUp((Student)obj, this.Topmost);
+                frm = new PopUp((Student)obj, this.Topmost,chkShowFullNames.IsChecked == true);
             } else {
                 // assume string if not student.
                 frm = new PopUp(obj.ToString(), this.Topmost);
@@ -355,9 +384,14 @@ namespace RosterRandomizer {
                     studentsToExport.Add(st);
                 }
                 sfd.Filter = _JSONFileFilter;
+                string defName = DateTime.Now.ToString("MM-dd-yyyy_HH-mm-ss");
+                sfd.FileName = defName;
                 if (sfd.ShowDialog() == true) {
+                    // Create default file name based on date.
                     string jsonString = DataStore.ConvertToJSON(studentsToExport);
                     File.WriteAllText(sfd.FileName, jsonString);
+                    // file save, no changes.
+                    _ListIsDirty = false;
                 } else {
                     ShowPopUp("Oops, problem getting file.");
                 }
@@ -366,7 +400,7 @@ namespace RosterRandomizer {
             }
         }
 
-   
+
         private void btnResetMe_Click(object sender, RoutedEventArgs e) {
             Button btn = (Button)sender;
             string bNum = btn.Name.Split("_")[1];
@@ -398,10 +432,6 @@ namespace RosterRandomizer {
             // make sure all checks match condition being set. 
             miOnTop.IsChecked = chkOnTop.IsChecked == true;
 
-        }
-
-        private void miExit_Click(object sender, RoutedEventArgs e) {
-            Application.Current.Shutdown();
         }
 
         private void miWhereGetRoster_Click(object sender, RoutedEventArgs e) {

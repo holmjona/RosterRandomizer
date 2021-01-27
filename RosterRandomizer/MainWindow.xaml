@@ -17,13 +17,21 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="99">
-            <MenuItem Header="_Options" HorizontalAlignment="Left">
-                <MenuItem IsCheckable="True" x:Name="miOnTop" Header="Keep Window On _Top" Click="miOnTop_Checked"></MenuItem>
-                <MenuItem x:Name="miAttendance" Header="_Attendance">
+            <MenuItem Header="_File" HorizontalAlignment="Left">
+                <MenuItem Header="_Load Roster" HorizontalAlignment="Left" Click="btnLoadRoster_Click" />
+                <MenuItem Header="_Export Roster" HorizontalAlignment="Left" Click="btnExportStudents_Click" />
+                <MenuItem Header="E_xit" HorizontalAlignment="Left" Click="Close_Application" />
+            </MenuItem>
+            <MenuItem Header="_List" HorizontalAlignment="Left">
+                <MenuItem Header="_Random Student" HorizontalAlignment="Left" Click="btnPickRandom_Click" />
+                <MenuItem Header="_Add a Student" HorizontalAlignment="Left" Click="btnAddStudent_Click" />
+                <MenuItem x:Name="miAttendance" Header="A_ttendance">
                     <MenuItem x:Name="miMarkAllHere" Header="_All Here" Click="miMarkAllHere_Click"></MenuItem>
                 </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Options" HorizontalAlignment="Left">
+                <MenuItem IsCheckable="True" x:Name="miOnTop" Header="Keep Window On _Top" Click="miOnTop_Checked"></MenuItem>
                 <Separator />
-                <MenuItem x:Name="miExit" Header="_Exit" Click="miExit_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Tools" HorizontalAlignment="Left">
                 <MenuItem IsCheckable="True" x:Name="miAttendanceReport" Header="Attendance _Report" Click="miAttendanceReport_Click"></MenuItem>
