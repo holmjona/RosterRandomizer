@@ -17,7 +17,9 @@ namespace RosterRandomizer {
     public partial class PopUp : Window {
         public static bool PickAgain = false;
         Student _ThisStudent = null;
-        public PopUp(string txtToShow,bool isTopMost) {
+        //private bool _AltDown = false;
+
+        public PopUp(string txtToShow, bool isTopMost) {
             this.Topmost = isTopMost;
             InitializeComponent();
             tbName.Text = txtToShow;
@@ -26,6 +28,7 @@ namespace RosterRandomizer {
             btnNotHere.Visibility = Visibility.Collapsed;
             pthPositive.Visibility = Visibility.Collapsed;
             btnOKAgain.Visibility = Visibility.Collapsed;
+            SetBindings();
         }
 
         public PopUp(Student stud, bool isTopMost, bool showFullNames) {
@@ -39,7 +42,52 @@ namespace RosterRandomizer {
                 tbName.Text += stud.LastName[0].ToString();
             }
             tbName.Text = stud.FullName;
+            SetBindings();
         }
+
+        public void SetBindings() {
+
+            //this.KeyDown += PopUp_KeyDown;
+            this.KeyUp += PopUp_KeyUp;
+        }
+
+        private void PopUp_KeyUp(object sender, KeyEventArgs e) {
+           // if (_AltDown) {
+             //   if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt || e.Key == Key.System) {
+                  //  _AltDown = false;
+                //} else
+        if (e.Key == Key.A) {
+                    btnOKAgain_Click(null, null);
+                } else if (e.Key == Key.O) {
+                    btnOK_Click(null, null);
+                } else if (e.Key == Key.N) {
+                    btnNotHere_Click(null, null);
+                }
+            //}
+         //   MessageBox.Show(e.Key.ToString());
+           // ShowUnderlines();
+        }
+
+        //private void PopUp_KeyDown(object sender, KeyEventArgs e) {
+        //    if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt || e.Key == Key.System) {
+        //        _AltDown = true;
+        //    }
+
+        //    ShowUnderlines();
+        //}
+
+        //private void ShowUnderlines() {
+        //    if (_AltDown) {
+        //        runAnother.TextDecorations.Add(new TextDecoration());
+        //        runNotHere.TextDecorations.Add(new TextDecoration());
+        //        runOK.TextDecorations.Add(new TextDecoration());
+        //    } else {
+        //        runAnother.TextDecorations.Clear();
+        //        runNotHere.TextDecorations.Clear();
+        //        runOK.TextDecorations.Clear();
+        //    }
+        //    UpdateLayout();
+        //}
 
         private void btnOK_Click(object sender, RoutedEventArgs e) {
             this.Close();
