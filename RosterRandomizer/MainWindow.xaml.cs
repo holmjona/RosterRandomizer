@@ -384,7 +384,7 @@ namespace RosterRandomizer {
                     studentsToExport.Add(st);
                 }
                 sfd.Filter = _JSONFileFilter;
-                string defName = DateTime.Now.ToString("MM-dd-yyyy_HH-mm-ss");
+                string defName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
                 sfd.FileName = defName;
                 if (sfd.ShowDialog() == true) {
                     // Create default file name based on date.

@@ -35,13 +35,13 @@ namespace RosterRandomizer {
             this.Topmost = isTopMost;
             InitializeComponent();
             _ThisStudent = stud;
-            tbName.Text = stud.FirstName;
+            tbName.Text = stud.FirstName + " ";
             if (showFullNames) {
                 tbName.Text += stud.LastName;
             } else {
                 tbName.Text += stud.LastName[0].ToString();
             }
-            tbName.Text = stud.FullName;
+           // tbName.Text = stud.FullName;
             SetBindings();
         }
 
