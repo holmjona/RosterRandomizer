@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -100,6 +101,14 @@ namespace RosterRandomizer {
         private void btnNotHere_Click(object sender, RoutedEventArgs e) {
             if (_ThisStudent != null) {
                 _ThisStudent.InClass = false;
+                if (MainWindow.UseSounds) {
+                    WaveOutEvent we = new WaveOutEvent();
+                    // https://github.com/naudio/NAudio
+                    AudioFileReader afr = new AudioFileReader(@"wahwah.wav");
+                    we.Init(afr);
+                    we.Play();
+                    System.Threading.Thread.Sleep(1000);
+                }
             }
             PopUp.PickAgain = true;
             this.Close();

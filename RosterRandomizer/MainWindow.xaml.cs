@@ -24,8 +24,9 @@ namespace RosterRandomizer {
     /// </summary>
     public partial class MainWindow : Window {
 
-
         private static List<CheckBox> _StudentCheckBoxes = new List<CheckBox>();
+        public static bool UseSounds = true;
+
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
         private double _BoxSize = 100;
         private bool? _ListIsDirty = null;
@@ -39,11 +40,6 @@ namespace RosterRandomizer {
         }
 
         private void Close_Application(object sender, RoutedEventArgs e) {
-            WaveOutEvent we = new WaveOutEvent();
-            // https://github.com/naudio/NAudio
-            AudioFileReader afr = new AudioFileReader(@"beep.wav");
-            we.Init(afr);
-            we.Play();
             this.Close();
         }
 
@@ -472,6 +468,29 @@ namespace RosterRandomizer {
             foreach (Student currStudent in DataStore.Students.Values) {
                 currStudent.InClass = true;
                 UpdateStudentGridStyle(currStudent);
+            }
+        }
+
+        private void miUseSounds_Click(object sender, RoutedEventArgs e) {
+            UseSounds = miUseSounds.IsChecked;
+            if (UseSounds) {
+                WaveOutEvent we = new WaveOutEvent();
+                // https://github.com/naudio/NAudio
+                AudioFileReader afr = new AudioFileReader(@"beep.wav");
+                we.Init(afr);
+                we.Play();
+            }
+        }
+
+        private void btnUseSounds_Click(object sender, RoutedEventArgs e) {
+            miUseSounds.IsChecked = !miUseSounds.IsChecked;
+            miUseSounds_Click(null, null);
+            if (UseSounds) {
+                btnUseSounds.Content = "Sound On";
+                btnUseSounds.Background = new SolidColorBrush(Colors.LightGreen);
+            } else {
+                btnUseSounds.Content = "Sound OFF";
+                btnUseSounds.Background = new SolidColorBrush(Colors.LightPink);
             }
         }
     }

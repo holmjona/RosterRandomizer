@@ -13,6 +13,7 @@ namespace RosterRandomizer {
     public static class DataStore {
         private static Dictionary<string, Student> _Students;
         public static readonly Dictionary<string, SemaphoreSlim> Semaphores = new Dictionary<string, SemaphoreSlim>();
+        
 
         public static Dictionary<string, Student> Students {
             get {
@@ -23,6 +24,7 @@ namespace RosterRandomizer {
             }
         }
 
+   
         public static void Clear() {
             _Students = null;
         }
