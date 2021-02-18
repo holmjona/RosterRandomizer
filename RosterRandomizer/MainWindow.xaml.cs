@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using NAudio.Wave;
 
 namespace RosterRandomizer {
     /// <summary>
@@ -38,6 +39,11 @@ namespace RosterRandomizer {
         }
 
         private void Close_Application(object sender, RoutedEventArgs e) {
+            WaveOutEvent we = new WaveOutEvent();
+            // https://github.com/naudio/NAudio
+            AudioFileReader afr = new AudioFileReader(@"beep.wav");
+            we.Init(afr);
+            we.Play();
             this.Close();
         }
 
@@ -294,7 +300,7 @@ namespace RosterRandomizer {
         private void ShowPopUp(object obj) {
             PopUp frm;
             if (obj.GetType() == typeof(Student)) {
-                frm = new PopUp((Student)obj, this.Topmost,chkShowFullNames.IsChecked == true);
+                frm = new PopUp((Student)obj, this.Topmost, chkShowFullNames.IsChecked == true);
             } else {
                 // assume string if not student.
                 frm = new PopUp(obj.ToString(), this.Topmost);
