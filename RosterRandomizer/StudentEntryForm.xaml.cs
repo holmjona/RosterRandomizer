@@ -14,45 +14,56 @@ namespace RosterRandomizer {
     /// <summary>
     /// Interaction logic for AddStudent.xaml
     /// </summary>
-    public partial class AddStudent : Window {
+    public partial class StudentEntryForm : Window {
         public bool AddSuccessful = false;
         Student studentToEdit = null;
-        public AddStudent() {
+        public StudentEntryForm() {
             InitializeComponent();
-            tbEmailError.Visibility = Visibility.Hidden;
+            tbIdentifierError.Visibility = Visibility.Hidden;
+            
+            SetTabOrder(txtFirstName, txtLastName, txtIdentifier, btnCommit);
+
         }
 
-        public AddStudent(Student stud):this(){
+        public StudentEntryForm(Student stud) : this() {
             studentToEdit = stud;
             lblTitle.Content = "Edit " + stud.FullName;
-            btnAddStudent.Content = "Save Changes";
+            btnCommit.Content = "Save Changes";
             txtFirstName.Text = studentToEdit.FirstName;
             txtLastName.Text = studentToEdit.LastName;
-            txtEmail.Text = studentToEdit.Email;
+            txtIdentifier.Text = studentToEdit.Email;
         }
 
-        private void txtEmail_KeyUp(object sender, KeyEventArgs e) {
+        private void SetTabOrder(params Control[] elements) {
+            int tabOrder = 0;
+            foreach(Control ele in elements) {
+                ele.TabIndex = tabOrder++;
+            }
+            elements[0].Focus();
+        }
+
+        private void txtIdentifier_KeyUp(object sender, KeyEventArgs e) {
             string txtToCheck = ((TextBox)sender).Text.ToLower();
             bool isValid = true;
-            foreach(string key in DataStore.Students.Keys) {
+            foreach (string key in DataStore.Students.Keys) {
                 if (key == txtToCheck) {
                     isValid = false;
                     break;
                 }
             }
             if (!isValid) {
-                txtEmail.Style = App.Current.Resources["styTextBoxError"] as Style;
-                tbEmailError.Visibility = Visibility.Visible;
-                btnAddStudent.IsEnabled = false;
+                txtIdentifier.Style = App.Current.Resources["styTextBoxError"] as Style;
+                tbIdentifierError.Visibility = Visibility.Visible;
+                btnCommit.IsEnabled = false;
             } else {
-                txtEmail.Style = null;
-                tbEmailError.Visibility = Visibility.Hidden;
-                btnAddStudent.IsEnabled = true;
+                txtIdentifier.Style = null;
+                tbIdentifierError.Visibility = Visibility.Hidden;
+                btnCommit.IsEnabled = true;
             }
 
         }
 
-        private void btnAddStudent_Click(object sender, RoutedEventArgs e) {
+        private void btnCommit_Click(object sender, RoutedEventArgs e) {
             Student thisStudent;
             bool editingExisting = studentToEdit != null;
             string oldEmail = "";
@@ -65,8 +76,8 @@ namespace RosterRandomizer {
             }
             thisStudent.FirstName = txtFirstName.Text;
             thisStudent.LastName = txtLastName.Text;
-            thisStudent.Email = txtEmail.Text;
-            
+            thisStudent.Email = txtIdentifier.Text;
+
             if (editingExisting) {
                 bool emailChanged = oldEmail != thisStudent.Email;
                 if (emailChanged) {

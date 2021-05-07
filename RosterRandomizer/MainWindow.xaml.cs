@@ -29,7 +29,7 @@ namespace RosterRandomizer {
 
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
         private double _BoxSize = 100;
-        private bool? _ListIsDirty = null;
+        private bool? _ListIsDirty = null; // dirty list means that it has changed since last save.
 
         public MainWindow() {
             InitializeComponent();
@@ -331,14 +331,17 @@ namespace RosterRandomizer {
         }
 
         private void btnAddStudent_Click(object sender, RoutedEventArgs e) {
-            AddStudent frm = new AddStudent();
+            StudentEntryForm frm = new StudentEntryForm();
             frm.ShowDialog();
             if (frm.AddSuccessful) {
                 // added student
                 Student lastStudentAdded = DataStore.Students.Values.Last();
                 int newID = DataStore.Students.Count();
+                lastStudentAdded.InClass = true;
                 lastStudentAdded.ID = newID;
+                // rebuild student grid to make sure it now contains the new student. 
                 MakeStudentGrid(lastStudentAdded, chkShowFullNames.IsChecked);
+                UpdateStudentGridStyle(lastStudentAdded); // updates styles for new student.
             }
 
         }
@@ -350,7 +353,7 @@ namespace RosterRandomizer {
             Student studToEdit = DataStore.Students.Values
                 .FirstOrDefault(s => s.ID == studentID);
             if (studToEdit != null) {
-                AddStudent frm = new AddStudent(studToEdit);
+                StudentEntryForm frm = new StudentEntryForm(studToEdit);
                 frm.ShowDialog();
                 if (frm.AddSuccessful) {
                     // Student email changed
