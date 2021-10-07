@@ -26,6 +26,7 @@ namespace RosterRandomizer {
 
         private static List<CheckBox> _StudentCheckBoxes = new List<CheckBox>();
         public static bool UseSounds = true;
+        private bool _ControlPressed = false;
 
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
         private double _BoxSize = 100;
@@ -34,9 +35,22 @@ namespace RosterRandomizer {
         public MainWindow() {
             InitializeComponent();
             tbShowingOnTop.Visibility = Visibility.Hidden;
+            this.KeyDown += MainWindow_KeyDown;
+            this.KeyUp += MainWindow_KeyUp;
             // fix for odd menu behavior is likely found here:
             //https://stackoverflow.com/questions/4630954/wpf-menu-displays-to-the-left-of-the-window
             this.Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e) {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl) _ControlPressed = false;
+            // change box size by 5%
+            if (_ControlPressed && e.Key == Key.OemPlus) sldBoxSize.Value += sldBoxSize.Maximum * .05;
+            if (_ControlPressed && e.Key == Key.OemMinus) sldBoxSize.Value -= sldBoxSize.Maximum * .05;
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl) _ControlPressed = true;
         }
 
         private void Close_Application(object sender, RoutedEventArgs e) {
