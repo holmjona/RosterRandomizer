@@ -18,12 +18,12 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="99">
             <MenuItem Header="_File" HorizontalAlignment="Left">
-                <MenuItem Header="_Load Roster" HorizontalAlignment="Left" Click="btnLoadRoster_Click" />
-                <MenuItem Header="_Export Roster" HorizontalAlignment="Left" Click="btnExportStudents_Click" />
-                <MenuItem Header="E_xit" HorizontalAlignment="Left" Click="Close_Application" />
+                <MenuItem Header="_Load Roster" InputGestureText="CTRL+O" HorizontalAlignment="Left" Click="btnLoadRoster_Click" />
+                <MenuItem Header="_Export (Save) Roster" InputGestureText="CTRL+S" HorizontalAlignment="Left" Click="btnExportStudents_Click" />
+                <MenuItem Header="E_xit" InputGestureText="CTRL+X" HorizontalAlignment="Left" Click="Close_Application" />
             </MenuItem>
             <MenuItem Header="_List" HorizontalAlignment="Left">
-                <MenuItem Header="_Random Student" HorizontalAlignment="Left" Click="btnPickRandom_Click" />
+                <MenuItem Header="_Random Student" InputGestureText="CTRL+R" HorizontalAlignment="Left" Click="btnPickRandom_Click" />
                 <MenuItem Header="_Add a Student" HorizontalAlignment="Left" Click="btnAddStudent_Click" />
                 <MenuItem x:Name="miAttendance" Header="A_ttendance">
                     <MenuItem x:Name="miMarkAllHere" Header="_All Here" Click="miMarkAllHere_Click"></MenuItem>
@@ -36,6 +36,9 @@
             </MenuItem>
             <MenuItem Header="_Tools" HorizontalAlignment="Left">
                 <MenuItem IsCheckable="True" x:Name="miAttendanceReport" Header="Attendance _Report" Click="miAttendanceReport_Click"></MenuItem>
+                <MenuItem x:Name="miIncreaseBoxSize" Header="_Increase Box Size" InputGestureText="CTRL+=" Click="miIncreaseBoxSize_Click" ></MenuItem>
+                <MenuItem x:Name="miDecreaseBoxSize" Header="_Decrease Box Size" InputGestureText="CTRL+-" Click="miDecreaseBoxSize_Click"></MenuItem>
+
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem x:Name="miWhereGetRoster" Header="Where do I get my _Roster?" Click="miWhereGetRoster_Click" ></MenuItem>
@@ -54,13 +57,16 @@
                 <Button.Content>
                     <TextBlock Style="{DynamicResource styButtonText}">
                     Load Class Roster
+                         <LineBreak />
+                        (CTRL+O)
                     </TextBlock>
                 </Button.Content>
             </Button>
             <Button x:Name="btnPickRandom" Click="btnPickRandom_Click" Style="{DynamicResource styMenuButton}">
                 <Button.Content>
                     <TextBlock Style="{DynamicResource styButtonText}">
-                    Pick Random Student
+                    Pick Random Student <LineBreak />
+                        (CTRL+R)
                     </TextBlock>
                 </Button.Content>
             </Button>
@@ -74,7 +80,8 @@
             <Button x:Name="btnExportStudents" Click="btnExportStudents_Click" Style="{DynamicResource styMenuButton}">
                 <Button.Content>
                     <TextBlock Style="{DynamicResource styButtonText}">
-                    Export Students
+                    Save List of Students  <LineBreak />
+                        (CTRL+S)
                     </TextBlock>
                 </Button.Content>
             </Button>

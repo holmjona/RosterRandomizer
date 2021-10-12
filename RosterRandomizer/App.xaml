@@ -17,7 +17,7 @@
         <Style TargetType="Button" x:Key="styMenuButton">
             <Setter Property="Margin" Value="5" />
             <Setter Property="Width" Value="100" />
-            <Setter Property="Height" Value="60" />
+            <Setter Property="Height" Value="70" />
 
         </Style>
         <Style TargetType="Button" x:Key="styResetStudentButton">

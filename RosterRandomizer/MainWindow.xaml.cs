@@ -31,6 +31,7 @@ namespace RosterRandomizer {
         private string _JSONFileFilter = "JSON File|*.json;*.js|All Files|*.*";
         private double _BoxSize = 100;
         private bool? _ListIsDirty = null; // dirty list means that it has changed since last save.
+        private double _boxChangeRatio = .05;
 
         public MainWindow() {
             InitializeComponent();
@@ -45,8 +46,11 @@ namespace RosterRandomizer {
         private void MainWindow_KeyUp(object sender, KeyEventArgs e) {
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl) _ControlPressed = false;
             // change box size by 5%
-            if (_ControlPressed && e.Key == Key.OemPlus) sldBoxSize.Value += sldBoxSize.Maximum * .05;
-            if (_ControlPressed && e.Key == Key.OemMinus) sldBoxSize.Value -= sldBoxSize.Maximum * .05;
+            if (_ControlPressed && e.Key == Key.OemPlus) miIncreaseBoxSize_Click(null, null);
+            if (_ControlPressed && e.Key == Key.OemMinus) miDecreaseBoxSize_Click(null, null);
+            if (_ControlPressed && e.Key == Key.O) btnLoadRoster_Click(null, null);
+            if (_ControlPressed && e.Key == Key.R) btnPickRandom_Click(null, null);
+            if (_ControlPressed && e.Key == Key.S) btnExportStudents_Click(null, null);
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e) {
@@ -81,11 +85,11 @@ namespace RosterRandomizer {
         /// <param name="e"></param>
         private void btnLoadRoster_Click(object sender, RoutedEventArgs e) {
             OpenFileDialog ofd = new OpenFileDialog();
-            // clear roster first
-            DataStore.Clear();
 
             ofd.Filter = _JSONFileFilter;
             if (ofd.ShowDialog() == true) {
+            // clear roster first, but only if we get a valid file. 
+            DataStore.Clear();
                 String lines = File.ReadAllText(ofd.FileName);
                 List<Student> students = DataStore.ParseStudents(lines);
                 foreach (Student stud in students) {
@@ -509,6 +513,14 @@ namespace RosterRandomizer {
                 btnUseSounds.Content = "Sound OFF";
                 btnUseSounds.Background = new SolidColorBrush(Colors.LightPink);
             }
+        }
+
+        private void miIncreaseBoxSize_Click(object sender, RoutedEventArgs e) {
+            sldBoxSize.Value += sldBoxSize.Maximum * _boxChangeRatio;
+        }
+
+        private void miDecreaseBoxSize_Click(object sender, RoutedEventArgs e) {
+            sldBoxSize.Value -= sldBoxSize.Maximum * _boxChangeRatio;
         }
     }
 }
