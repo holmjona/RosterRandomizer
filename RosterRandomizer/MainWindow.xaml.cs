@@ -465,7 +465,7 @@ namespace RosterRandomizer {
 
         private void sldBoxSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             _BoxSize = sldBoxSize.Value;
-            FillWrapPanel(chkShowFullNames.IsEnabled == true);
+            FillWrapPanel(chkShowFullNames.IsChecked == true);
         }
 
         private void miAttendanceReport_Click(object sender, RoutedEventArgs e) {
