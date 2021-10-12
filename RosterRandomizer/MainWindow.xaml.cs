@@ -35,12 +35,26 @@ namespace RosterRandomizer {
 
         public MainWindow() {
             InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
             tbShowingOnTop.Visibility = Visibility.Hidden;
             this.KeyDown += MainWindow_KeyDown;
             this.KeyUp += MainWindow_KeyUp;
             // fix for odd menu behavior is likely found here:
             //https://stackoverflow.com/questions/4630954/wpf-menu-displays-to-the-left-of-the-window
             this.Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
+            // trying to fix issue with DPI awareness after Windows Update.
+            // https://docs.microsoft.com/en-us/answers/questions/370707/how-to-dpi-aware-wpf-applicaton.html
+
+            // The following link had the actual solution:
+            // https://github.com/Microsoft/WPF-Samples/tree/master/PerMonitorDPI
+            //PresentationSource psource = PresentationSource.FromVisual(this);
+
+            //if (psource != null) {
+
+            //}
         }
 
         private void MainWindow_KeyUp(object sender, KeyEventArgs e) {
@@ -88,8 +102,8 @@ namespace RosterRandomizer {
 
             ofd.Filter = _JSONFileFilter;
             if (ofd.ShowDialog() == true) {
-            // clear roster first, but only if we get a valid file. 
-            DataStore.Clear();
+                // clear roster first, but only if we get a valid file. 
+                DataStore.Clear();
                 String lines = File.ReadAllText(ofd.FileName);
                 List<Student> students = DataStore.ParseStudents(lines);
                 foreach (Student stud in students) {
