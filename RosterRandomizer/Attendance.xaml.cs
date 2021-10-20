@@ -37,6 +37,7 @@ namespace RosterRandomizer {
                 }
 
             }
+            
             ShowResults(_DictResults);
 
         }
@@ -53,9 +54,8 @@ namespace RosterRandomizer {
                 }
             }
 
-            
+            SortedDictionary<string, string> sortDict = new SortedDictionary<string, string>();
             foreach (KeyValuePair<String, List<Student>> kvp in attend) {
-                TextBlock tb = new TextBlock();
                 String stuName = kvp.Value[0].FullName;
                 int inClass = 0;
                 double totClass = (double)kvp.Value.Count;
@@ -65,9 +65,16 @@ namespace RosterRandomizer {
                     }
                 }
                 double avg = inClass / totClass;
-                tb.Text = String.Format("{0} - {1}", stuName , avg.ToString("P2"));
+                sortDict.Add(kvp.Value[0].LastName.PadRight(40) + kvp.Value[0].FirstName, 
+                    String.Format("{0} - {1}", stuName , avg.ToString("P2")));
+            }
+
+            foreach (KeyValuePair<string, string> kvp in sortDict) {
+                TextBlock tb = new TextBlock();
+                tb.Text = kvp.Value;
                 stkOutput.Children.Add(tb);
             }
+
         }
     }
 }
